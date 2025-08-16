@@ -101,11 +101,11 @@
   npm install react-hook-form @hookform/resolvers zod
   ```
   - **Test**: Form validation çalışıyor mu? ✅ Auth schemas + form hooks aktif!
-- [ ] Chart.js kurulum ve temel setup
+- [x] Chart.js kurulum ve temel setup
   ```bash
   npm install chart.js react-chartjs-2
   ```
-  - **Test**: Basit chart render ediliyor mu?
+  - **Test**: Basit chart render ediliyor mu? ✅ Progress, Weight, Frequency chart'ları aktif!
 
 ---
 
