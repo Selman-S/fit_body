@@ -3,6 +3,7 @@
 
 import { storage } from './storage';
 import { User, UserPreferences } from '@/lib/types';
+import { exerciseService } from './exercises';
 
 interface RegisterData {
   email: string;
@@ -103,6 +104,9 @@ class AuthService {
     // Set as current user
     this.currentUser = newUser;
     storage.set(this.CURRENT_USER_KEY, newUser.id);
+    
+    // Initialize default exercises and programs for new user
+    exerciseService.initializeDefaultData();
     
     return newUser;
   }
