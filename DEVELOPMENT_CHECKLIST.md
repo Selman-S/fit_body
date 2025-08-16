@@ -91,16 +91,16 @@
   npm install zustand
   ```
   - **Test**: Basic store create edilebiliyor mu? ✅ Auth store + persist middleware aktif!
-- [ ] Framer Motion kurulum
+- [x] Framer Motion kurulum
   ```bash
   npm install framer-motion
   ```
-  - **Test**: Basit animasyon çalışıyor mu?
-- [ ] React Hook Form + Zod integration
+  - **Test**: Basit animasyon çalışıyor mu? ✅ AnimatedCard + smooth transitions aktif!
+- [x] React Hook Form + Zod integration
   ```bash
   npm install react-hook-form @hookform/resolvers zod
   ```
-  - **Test**: Form validation çalışıyor mu?
+  - **Test**: Form validation çalışıyor mu? ✅ Auth schemas + form hooks aktif!
 - [ ] Chart.js kurulum ve temel setup
   ```bash
   npm install chart.js react-chartjs-2
