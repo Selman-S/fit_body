@@ -38,7 +38,7 @@ export class WorkoutService {
   }
 
   // Start workout session
-  startWorkoutSession(data: Omit<WorkoutSession, 'id' | 'createdAt' | 'updatedAt' | 'exercises'>): WorkoutSession {
+  startWorkoutSession(data: Omit<WorkoutSession, 'id' | 'createdAt' | 'updatedAt' | 'exercises' | 'isCompleted'>): WorkoutSession {
     const session = this.storage.addToCollection<WorkoutSession>(
       STORAGE_KEYS.WORKOUT_SESSIONS, 
       {
@@ -80,6 +80,11 @@ export class WorkoutService {
     this.storage.set(STORAGE_KEYS.WORKOUT_SESSIONS, sessions);
     
     return newExerciseLog;
+  }
+
+  // Get all workout programs
+  getAllWorkoutPrograms(): WorkoutProgram[] {
+    return this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
   }
 
   // Get workout stats
