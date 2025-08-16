@@ -28,6 +28,7 @@ export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElem
   helperText?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  icon?: React.ComponentType<{ className?: string }>;
   fullWidth?: boolean;
 }
 
@@ -42,6 +43,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     helperText,
     leftIcon,
     rightIcon,
+    icon,
     fullWidth = false,
     disabled,
     ...props 
@@ -65,9 +67,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {/* Input container */}
         <div className="relative">
           {/* Left icon */}
-          {leftIcon && (
+          {(leftIcon || icon) && (
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-              {leftIcon}
+              {icon ? React.createElement(icon, { className: 'w-5 h-5' }) : leftIcon}
             </div>
           )}
 
@@ -78,7 +80,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               'w-full rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2',
               inputVariants[inputVariant],
               inputSizes[size],
-              leftIcon && 'pl-10',
+              (leftIcon || icon) && 'pl-10',
               rightIcon && 'pr-10',
               fullWidth && 'w-full',
               className
