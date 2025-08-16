@@ -101,10 +101,14 @@ Projeye katkıda bulunmak için lütfen [`DEVELOPMENT_GUIDE.md`](docs/DEVELOPMEN
 - ✅ Client-side service architecture
 
 ### 🎯 Hemen Başlanabilir
-- 🚀 **[PROJECT_TASKS.md](docs/PROJECT_TASKS.md)** - 8 haftalık detaylı task breakdown
+- ✅ **[DEVELOPMENT_CHECKLIST.md](DEVELOPMENT_CHECKLIST.md)** - Interactive checkbox'lu task listesi
+- 📋 **[PROJECT_TASKS.md](docs/PROJECT_TASKS.md)** - 8 haftalık detaylı task breakdown  
 - ⚡ **Sprint 1**: Next.js setup (2-3 gün)  
 - 🔋 **Sprint 2**: localStorage services + Auth (1 hafta)
 - 💪 **Sprint 3**: Workout tracking system (1 hafta)
+
+### 🔥 Development Rule: Test → Check → Next
+**Her task'ı kodla → Test et → ✅ İşaretle → Sonraki task'a geç**
 
 ### 🎁 Bonus: Zero Backend Complexity
 - ❌ No database setup required
