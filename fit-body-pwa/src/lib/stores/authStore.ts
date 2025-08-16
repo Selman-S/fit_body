@@ -1,67 +1,106 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { authService } from '@/lib/services/auth';
 import type { User } from '@/lib/types';
 
-interface AuthState {
+interface RegisterData {
+  email: string;
+  username: string;
+  firstName?: string;
+  lastName?: string;
+  dateOfBirth?: string;
+  height?: number;
+  currentWeight?: number;
+  targetWeight?: number;
+  activityLevel: 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active';
+  fitnessGoals: string[];
+}
+
+interface AuthStore {
   user: User | null;
-  isAuthenticated: boolean;
   isLoading: boolean;
-}
-
-interface AuthActions {
-  setUser: (user: User | null) => void;
-  setLoading: (loading: boolean) => void;
-  login: (user: User) => void;
+  isAuthenticated: boolean;
+  login: (identifier: string) => Promise<boolean>;
+  register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
-  clearAuth: () => void;
+  updateProfile: (updates: Partial<Omit<User, 'id' | 'createdAt' | 'email'>>) => Promise<boolean>;
+  updatePreferences: (preferences: Partial<User['preferences']>) => Promise<boolean>;
 }
-
-type AuthStore = AuthState & AuthActions;
 
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
-      // State
       user: null,
-      isAuthenticated: false,
       isLoading: false,
+      isAuthenticated: false,
 
-      // Actions
-      setUser: (user) =>
-        set({
-          user,
-          isAuthenticated: !!user,
-        }),
+      login: async (identifier: string) => {
+        set({ isLoading: true });
+        try {
+          const user = authService.login(identifier);
+          if (user) {
+            set({ user, isAuthenticated: true, isLoading: false });
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('Login failed:', error);
+          return false;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-      setLoading: (isLoading) => set({ isLoading }),
+      register: async (userData: RegisterData) => {
+        set({ isLoading: true });
+        try {
+          const user = authService.register(userData);
+          set({ user, isAuthenticated: true, isLoading: false });
+          return true;
+        } catch (error) {
+          console.error('Registration failed:', error);
+          return false;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-      login: (user) =>
-        set({
-          user,
-          isAuthenticated: true,
-          isLoading: false,
-        }),
+      logout: () => {
+        authService.logout();
+        set({ user: null, isAuthenticated: false });
+      },
 
-      logout: () =>
-        set({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
-        }),
+      updateProfile: async (updates: Partial<Omit<User, 'id' | 'createdAt' | 'email'>>) => {
+        try {
+          const updatedUser = authService.updateProfile(updates);
+          if (updatedUser) {
+            set({ user: updatedUser });
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('Profile update failed:', error);
+          return false;
+        }
+      },
 
-      clearAuth: () =>
-        set({
-          user: null,
-          isAuthenticated: false,
-          isLoading: false,
-        }),
+      updatePreferences: async (preferences: Partial<User['preferences']>) => {
+        try {
+          const updatedUser = authService.updatePreferences(preferences);
+          if (updatedUser) {
+            set({ user: updatedUser });
+            return true;
+          }
+          return false;
+        } catch (error) {
+          console.error('Preferences update failed:', error);
+          return false;
+        }
+      },
     }),
     {
       name: 'fit-body-auth',
-      partialize: (state) => ({
-        user: state.user,
-        isAuthenticated: state.isAuthenticated,
-      }),
+      partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
     }
   )
 );
