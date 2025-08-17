@@ -1,7 +1,10 @@
+'use client';
+
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { AuthGuard } from '@/components/auth/AuthGuard';
+import { useRouter } from 'next/navigation';
 import { 
   Dumbbell, 
   Calendar,
@@ -12,6 +15,7 @@ import {
 } from 'lucide-react';
 
 export default function DashboardPage() {
+  const router = useRouter();
   return (
     <AuthGuard>
       <MainLayout showNavigation={true}>
@@ -28,13 +32,21 @@ export default function DashboardPage() {
           </div>
           {/* Mobilde buton alt kısımda, desktop'ta sağda */}
           <div className="lg:hidden">
-            <Button variant="primary" className="w-full">
+            <Button 
+              variant="primary" 
+              className="w-full"
+              onClick={() => router.push('/workout')}
+            >
               <Play className="w-4 h-4 mr-2" />
               Antrenman Başlat
             </Button>
           </div>
           <div className="hidden lg:block">
-            <Button variant="primary" size="lg">
+            <Button 
+              variant="primary" 
+              size="lg"
+              onClick={() => router.push('/workout')}
+            >
               <Play className="w-4 h-4 mr-2" />
               Antrenman Başlat
             </Button>
@@ -114,7 +126,11 @@ export default function DashboardPage() {
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Bugünkü Antrenman
             </h2>
-            <Button variant="secondary" size="sm">
+            <Button 
+              variant="secondary" 
+              size="sm"
+              onClick={() => router.push('/workout')}
+            >
               <Calendar className="w-4 h-4 mr-2" />
               Programı Görüntüle
             </Button>
@@ -195,7 +211,11 @@ export default function DashboardPage() {
           </div>
 
           <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <Button variant="primary" className="w-full">
+            <Button 
+              variant="primary" 
+              className="w-full"
+              onClick={() => router.push('/workout')}
+            >
               <Play className="w-4 h-4 mr-2" />
               Antrenmanı Başlat
             </Button>

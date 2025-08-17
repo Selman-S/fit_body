@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { 
   Home, 
   Dumbbell, 
@@ -35,19 +36,25 @@ const navigationItems = [
 
 export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
   const { user } = useAuthStore();
-  const [activeItem, setActiveItem] = useState('/dashboard');
+  const router = useRouter();
+  const pathname = usePathname();
+  const [activeItem, setActiveItem] = useState(pathname);
   
   // Debug props - sadece props değiştiğinde
   useEffect(() => {
-    console.log('Sidebar props changed:', { isOpen, isMobile });
   }, [isOpen, isMobile]);
 
+  // Update active item when pathname changes
+  useEffect(() => {
+    setActiveItem(pathname);
+  }, [pathname]);
+
   const handleNavigation = (href: string) => {
-    setActiveItem(href);
     if (isMobile) {
       onClose();
     }
-    // TODO: Implement navigation
+    // Navigate to the page
+    router.push(href);
   };
 
   const sidebarClasses = cn(

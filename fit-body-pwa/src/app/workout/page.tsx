@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { AuthGuard } from '@/components/auth/AuthGuard';
+import { MainLayout } from '@/components/layout/MainLayout';
 
 import { useToast } from '@/components/ui/Toast';
 import { ExerciseService } from '@/lib/services/exercises';
@@ -130,27 +131,29 @@ export default function WorkoutPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-6"></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[...Array(6)].map((_, i) => (
-                <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
-              ))}
+      <AuthGuard>
+        <MainLayout showNavigation={true}>
+          <div className="space-y-6">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mb-6"></div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </MainLayout>
+      </AuthGuard>
     );
   }
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        {/* Header */}
-        <div className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-          <div className="max-w-4xl mx-auto px-4 py-6">
+      <MainLayout showNavigation={true}>
+        <div className="space-y-6">
+          {/* Page Header */}
+          <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               💪 Workout Center
             </h1>
@@ -158,9 +161,7 @@ export default function WorkoutPage() {
               Choose your exercises and start your fitness journey
             </p>
           </div>
-        </div>
 
-        <div className="max-w-4xl mx-auto p-4">
           {/* Search and Filters */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -332,82 +333,82 @@ export default function WorkoutPage() {
               </div>
             )}
           </div>
-        </div>
 
-        {/* Exercise Detail Modal */}
-        <Modal
-          isOpen={isExerciseModalOpen}
-          onClose={() => setIsExerciseModalOpen(false)}
-          size="lg"
-          title={selectedExercise?.name}
-        >
-          {selectedExercise && (
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="text-4xl">
-                  {getCategoryIcon(selectedExercise.category)}
-                </div>
-                <div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {selectedExercise.category} • Level {selectedExercise.difficultyLevel}
+          {/* Exercise Detail Modal */}
+          <Modal
+            isOpen={isExerciseModalOpen}
+            onClose={() => setIsExerciseModalOpen(false)}
+            size="lg"
+            title={selectedExercise?.name}
+          >
+            {selectedExercise && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="text-4xl">
+                    {getCategoryIcon(selectedExercise.category)}
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {selectedExercise.muscleGroups.join(', ')}
+                  <div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {selectedExercise.category} • Level {selectedExercise.difficultyLevel}
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      {selectedExercise.muscleGroups.join(', ')}
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-gray-900 dark:text-white mb-2">Instructions</h4>
-                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                  {selectedExercise.instructions}
-                </p>
-              </div>
-              
-              {selectedExercise.tips && (
+                
                 <div>
-                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Tips</h4>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Instructions</h4>
                   <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                    {selectedExercise.tips}
+                    {selectedExercise.instructions}
                   </p>
                 </div>
-              )}
-              
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="font-medium text-gray-900 dark:text-white">Duration:</span>
-                  <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.durationEstimate}s</span>
+                
+                {selectedExercise.tips && (
+                  <div>
+                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Tips</h4>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                      {selectedExercise.tips}
+                    </p>
+                  </div>
+                )}
+                
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="font-medium text-gray-900 dark:text-white">Duration:</span>
+                    <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.durationEstimate}s</span>
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-900 dark:text-white">Calories/min:</span>
+                    <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.caloriesPerMinute}</span>
+                  </div>
                 </div>
-                <div>
-                  <span className="font-medium text-gray-900 dark:text-white">Calories/min:</span>
-                  <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.caloriesPerMinute}</span>
+                
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    variant="primary"
+                    onClick={() => {
+                      // TODO: Add to workout program
+                      addToast({ type: 'success', message: 'Exercise added to workout!' });
+                      setIsExerciseModalOpen(false);
+                    }}
+                    className="flex-1"
+                  >
+                    Add to Workout
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => setIsExerciseModalOpen(false)}
+                    className="flex-1"
+                  >
+                    Close
+                  </Button>
                 </div>
               </div>
-              
-              <div className="flex gap-3 pt-4">
-                <Button
-                  variant="primary"
-                  onClick={() => {
-                    // TODO: Add to workout program
-                    addToast({ type: 'success', message: 'Exercise added to workout!' });
-                    setIsExerciseModalOpen(false);
-                  }}
-                  className="flex-1"
-                >
-                  Add to Workout
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => setIsExerciseModalOpen(false)}
-                  className="flex-1"
-                >
-                  Close
-                </Button>
-              </div>
-            </div>
-          )}
-        </Modal>
-      </div>
+            )}
+          </Modal>
+        </div>
+      </MainLayout>
     </AuthGuard>
   );
 }

@@ -3,6 +3,8 @@
 import { AccessibilitySettings } from '@/components/ui/AccessibilitySettings';
 import { KeyboardNavigation } from '@/components/ui/KeyboardNavigation';
 import { ColorContrast } from '@/components/ui/ColorContrast';
+import { AuthGuard } from '@/components/auth/AuthGuard';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { 
   Accessibility, 
   Keyboard, 
@@ -11,20 +13,21 @@ import {
 
 export default function SettingsPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Ayarlar</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Uygulamayı ihtiyaçlarına göre özelleştir
-          </p>
-        </div>
-
+    <AuthGuard>
+      <MainLayout showNavigation={true}>
         <div className="space-y-6">
+          {/* Page Header */}
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Ayarlar</h1>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              Uygulamayı ihtiyaçlarına göre özelleştir
+            </p>
+          </div>
+
           {/* Profile */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Profil</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">Profil</h2>
             </div>
             <div className="p-6">
               <div className="flex items-center gap-4 mb-6">
@@ -32,28 +35,28 @@ export default function SettingsPage() {
                   U
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">Kullanıcı Adı</h3>
-                  <p className="text-sm text-gray-600">user@example.com</p>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white">Kullanıcı Adı</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">user@example.com</p>
                 </div>
               </div>
-              <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+              <button className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium">
                 Profili Düzenle →
               </button>
             </div>
           </div>
 
           {/* Preferences */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Tercihler</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">Tercihler</h2>
             </div>
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900">Tema</h3>
-                  <p className="text-sm text-gray-600">Arayüz görünümü</p>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Tema</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Arayüz görünümü</p>
                 </div>
-                <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                <select className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                   <option>Sistem</option>
                   <option>Açık</option>
                   <option>Koyu</option>
@@ -62,10 +65,10 @@ export default function SettingsPage() {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900">Birim Sistemi</h3>
-                  <p className="text-sm text-gray-600">Ölçüm birimleri</p>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Birim Sistemi</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Ölçüm birimleri</p>
                 </div>
-                <select className="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                <select className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                   <option>Metrik (kg, cm)</option>
                   <option>Imperial (lb, ft)</option>
                 </select>
@@ -74,27 +77,27 @@ export default function SettingsPage() {
           </div>
 
           {/* Notifications */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Bildirimler</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">Bildirimler</h2>
             </div>
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900">Egzersiz Hatırlatmaları</h3>
-                  <p className="text-sm text-gray-600">Günlük antrenman bildirimleri</p>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Egzersiz Hatırlatmaları</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Günlük antrenman bildirimleri</p>
                 </div>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm">
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
                   Açık
                 </button>
               </div>
               
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-900">Başarı Bildirimleri</h3>
-                  <p className="text-sm text-gray-600">Rozet ve milestone uyarıları</p>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Başarı Bildirimleri</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Rozet ve milestone uyarıları</p>
                 </div>
-                <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm">
+                <button className="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg text-sm hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors">
                   Kapalı
                 </button>
               </div>
@@ -102,9 +105,9 @@ export default function SettingsPage() {
           </div>
 
           {/* Data */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Veri Yönetimi</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">Veri Yönetimi</h2>
             </div>
             <div className="p-6 space-y-4">
               <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
@@ -120,34 +123,34 @@ export default function SettingsPage() {
           </div>
 
           {/* Accessibility */}
-          <div className="bg-white rounded-lg shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900 flex items-center gap-2">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white flex items-center gap-2">
                 ♿ Erişilebilirlik
               </h2>
             </div>
             <div className="p-6 space-y-6">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Uygulamayı ihtiyaçlarınıza göre özelleştirin. WCAG 2.1 AA standartlarına uygun erişilebilirlik özellikleri.
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center p-4 border border-gray-200 rounded-lg">
+                <div className="text-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/50">
                   <Accessibility className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1">Erişilebilirlik Ayarları</h3>
-                  <p className="text-xs text-gray-600">Yüksek kontrast, büyük metin, hareket azaltma</p>
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-1">Erişilebilirlik Ayarları</h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">Yüksek kontrast, büyük metin, hareket azaltma</p>
                 </div>
                 
-                <div className="text-center p-4 border border-gray-200 rounded-lg">
+                <div className="text-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/50">
                   <Keyboard className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1">Klavye Navigasyonu</h3>
-                  <p className="text-xs text-gray-600">Klavye kısayolları ve odak yönetimi</p>
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-1">Klavye Navigasyonu</h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">Klavye kısayolları ve odak yönetimi</p>
                 </div>
                 
-                <div className="text-center p-4 border border-gray-200 rounded-lg">
+                <div className="text-center p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-700/50">
                   <Palette className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                  <h3 className="font-medium text-gray-900 mb-1">Renk Kontrastı</h3>
-                  <p className="text-xs text-gray-600">WCAG uyumlu renk kombinasyonları</p>
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-1">Renk Kontrastı</h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">WCAG uyumlu renk kombinasyonları</p>
                 </div>
               </div>
 
@@ -159,7 +162,7 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </MainLayout>
+    </AuthGuard>
   );
 }
