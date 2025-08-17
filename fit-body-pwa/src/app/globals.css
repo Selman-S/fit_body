@@ -113,8 +113,8 @@ html {
 }
 
 body {
-  background-color: var(--background);
-  color: var(--on-background);
+  background-color: var(--background) !important;
+  color: var(--on-background) !important;
   transition: background-color var(--transition-normal), color var(--transition-normal);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   line-height: 1.6;
@@ -271,6 +271,11 @@ textarea:focus-visible,
               box-shadow var(--transition-normal);
 }
 
+.theme-text {
+  color: var(--on-surface) !important;
+  transition: color var(--transition-normal);
+}
+
 /* Animation Classes */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
@@ -314,22 +319,95 @@ textarea:focus-visible,
   100% { background-position: -200% 0; }
 }
 
+/* Light Mode Specific Adjustments */
+[data-theme="light"] {
+  /* Ensure light mode colors are properly applied */
+  .bg-gradient-to-br.from-blue-50.via-white.to-indigo-50 {
+    background: linear-gradient(to bottom right, #eff6ff, #ffffff, #e0e7ff) !important;
+  }
+  
+  /* Override any dark backgrounds */
+  body {
+    background-color: #ffffff !important;
+  }
+  
+  .min-h-screen {
+    background-color: transparent !important;
+  }
+  
+  /* Text colors for light mode */
+  .text-gray-900 { color: #111827 !important; }
+  .text-gray-800 { color: #1f2937 !important; }
+  .text-gray-700 { color: #374151 !important; }
+  .text-gray-600 { color: #4b5563 !important; }
+  .text-gray-500 { color: #6b7280 !important; }
+  .text-gray-400 { color: #9ca3af !important; }
+  .text-gray-300 { color: #d1d5db !important; }
+  .text-gray-200 { color: #e5e7eb !important; }
+  .text-gray-100 { color: #f3f4f6 !important; }
+  .text-gray-50 { color: #f9fafb !important; }
+  
+  /* Card backgrounds */
+  .bg-white { background-color: #ffffff !important; }
+  .bg-gray-50 { background-color: #f9fafb !important; }
+  .bg-gray-100 { background-color: #f3f4f6 !important; }
+  
+  /* Borders */
+  .border-gray-200 { border-color: #e5e7eb !important; }
+  .border-gray-300 { border-color: #d1d5db !important; }
+}
+
 /* Dark Mode Specific Adjustments */
 [data-theme="dark"] {
   /* Improve contrast for dark backgrounds */
-  .bg-gray-50 { background-color: var(--surface); }
-  .bg-gray-100 { background-color: var(--surface-variant); }
-  .bg-white { background-color: var(--surface); }
+  .bg-gray-50 { background-color: var(--surface) !important; }
+  .bg-gray-100 { background-color: var(--surface-variant) !important; }
+  .bg-white { background-color: var(--surface) !important; }
   
   /* Text colors for dark mode */
-  .text-gray-900 { color: var(--on-background); }
-  .text-gray-800 { color: var(--on-surface); }
-  .text-gray-700 { color: var(--on-surface); }
-  .text-gray-600 { color: var(--on-surface-variant); }
+  .text-gray-900 { color: var(--on-background) !important; }
+  .text-gray-800 { color: var(--on-surface) !important; }
+  .text-gray-700 { color: var(--on-surface) !important; }
+  .text-gray-600 { color: var(--on-surface-variant) !important; }
   
   /* Border colors for dark mode */
-  .border-gray-200 { border-color: var(--border-light); }
-  .border-gray-300 { border-color: var(--border-medium); }
+  .border-gray-200 { border-color: var(--border-light) !important; }
+  .border-gray-300 { border-color: var(--border-medium) !important; }
+  
+  /* Override Tailwind gradients for dark mode */
+  .bg-gradient-to-br.from-blue-50.via-white.to-indigo-50 {
+    background: linear-gradient(to bottom right, var(--surface), var(--surface-variant), var(--surface)) !important;
+  }
+  
+  /* Ensure dark mode body background */
+  body {
+    background-color: #0f172a !important;
+  }
+  
+  .min-h-screen {
+    background-color: transparent !important;
+  }
+  
+  /* Text colors for dark mode - Override all gray text classes */
+  .text-gray-900 { color: #f8fafc !important; }
+  .text-gray-800 { color: #e2e8f0 !important; }
+  .text-gray-700 { color: #e2e8f0 !important; }
+  .text-gray-600 { color: #cbd5e1 !important; }
+  .text-gray-500 { color: #94a3b8 !important; }
+  .text-gray-400 { color: #cbd5e1 !important; }
+  .text-gray-300 { color: #e2e8f0 !important; }
+  .text-gray-200 { color: #f1f5f9 !important; }
+  .text-gray-100 { color: #f8fafc !important; }
+  .text-gray-50 { color: #f8fafc !important; }
+  
+  /* Card backgrounds for dark mode */
+  .bg-white { background-color: #1e293b !important; }
+  .bg-gray-50 { background-color: #1e293b !important; }
+  .bg-gray-100 { background-color: #334155 !important; }
+  
+  /* Borders for dark mode */
+  .border-gray-200 { border-color: #334155 !important; }
+  .border-gray-300 { border-color: #475569 !important; }
 }
 
 /* Responsive Design */

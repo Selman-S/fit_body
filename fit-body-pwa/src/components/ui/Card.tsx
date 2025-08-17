@@ -5,11 +5,11 @@ import { cn } from '@/lib/utils';
 
 // Card variants
 const cardVariants = {
-  default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
-  workout: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 relative overflow-hidden border-l-4 border-l-blue-500',
-  stats: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center',
-  elevated: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl',
-  outline: 'bg-transparent border-2 border-gray-200 dark:border-gray-700',
+  default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 theme-text',
+  workout: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 relative overflow-hidden border-l-4 border-l-blue-500 theme-text',
+  stats: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center theme-text',
+  elevated: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl theme-text',
+  outline: 'bg-transparent border-2 border-gray-200 dark:border-gray-700 theme-text',
 };
 
 // Card sizes

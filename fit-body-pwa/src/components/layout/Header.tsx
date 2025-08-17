@@ -47,7 +47,7 @@ export function Header({ onMenuClick, isMobile }: HeaderProps) {
             <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">FB</span>
             </div>
-            <span className="font-semibold text-lg text-gray-900 dark:text-white">
+            <span className="font-semibold text-lg text-gray-900 dark:text-white theme-text">
               Fit Body
             </span>
           </div>
@@ -76,7 +76,7 @@ export function Header({ onMenuClick, isMobile }: HeaderProps) {
                 <User className="w-4 h-4 text-white" />
               </div>
               {!isMobile && (
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 theme-text">
                   {user?.firstName || user?.username || 'Kullanıcı'}
                 </span>
               )}

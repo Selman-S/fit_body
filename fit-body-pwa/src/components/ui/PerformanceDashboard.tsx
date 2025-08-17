@@ -96,39 +96,39 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <Clock className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium">LCP</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-white">LCP</span>
             {getMetricIcon(getMetricStatus(metrics.lcp, { good: 2500, needsImprovement: 4000 }))}
           </div>
           <div className={`text-lg font-bold ${getMetricColor(getMetricStatus(metrics.lcp, { good: 2500, needsImprovement: 4000 }))}`}>
             {metrics.lcp ? `${Math.round(metrics.lcp)}ms` : 'N/A'}
           </div>
-          <div className="text-xs text-gray-500">Largest Contentful Paint</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400">Largest Contentful Paint</div>
         </div>
 
         {/* FID */}
         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <Zap className="w-4 h-4 text-green-600" />
-            <span className="text-sm font-medium">FID</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-white">FID</span>
             {getMetricIcon(getMetricStatus(metrics.fid, { good: 100, needsImprovement: 300 }))}
           </div>
           <div className={`text-lg font-bold ${getMetricColor(getMetricStatus(metrics.fid, { good: 100, needsImprovement: 300 }))}`}>
             {metrics.fid ? `${Math.round(metrics.fid)}ms` : 'N/A'}
           </div>
-          <div className="text-xs text-gray-500">First Input Delay</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400">First Input Delay</div>
         </div>
 
         {/* CLS */}
         <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <Target className="w-4 h-4 text-purple-600" />
-            <span className="text-sm font-medium">CLS</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-white">CLS</span>
             {getMetricIcon(getMetricStatus(metrics.cls, { good: 0.1, needsImprovement: 0.25 }))}
           </div>
           <div className={`text-lg font-bold ${getMetricColor(getMetricStatus(metrics.cls, { good: 0.1, needsImprovement: 0.25 }))}`}>
             {metrics.cls ? metrics.cls.toFixed(3) : 'N/A'}
           </div>
-          <div className="text-xs text-gray-500">Cumulative Layout Shift</div>
+          <div className="text-xs text-gray-600 dark:text-gray-400">Cumulative Layout Shift</div>
         </div>
       </div>
 
@@ -139,24 +139,24 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
           <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <Activity className="w-4 h-4 text-orange-600" />
-              <span className="text-sm font-medium">FCP</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">FCP</span>
             </div>
             <div className="text-lg font-bold text-gray-900 dark:text-white">
               {metrics.fcp ? `${Math.round(metrics.fcp)}ms` : 'N/A'}
             </div>
-            <div className="text-xs text-gray-500">First Contentful Paint</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">First Contentful Paint</div>
           </div>
 
           {/* TTFB */}
           <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-indigo-600" />
-              <span className="text-sm font-medium">TTFB</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">TTFB</span>
             </div>
             <div className="text-lg font-bold text-gray-900 dark:text-white">
               {metrics.ttfb ? `${Math.round(metrics.ttfb)}ms` : 'N/A'}
             </div>
-            <div className="text-xs text-gray-500">Time to First Byte</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Time to First Byte</div>
           </div>
         </div>
       )}
@@ -168,24 +168,24 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
             Memory Usage
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center">
-              <div className="text-lg font-bold text-blue-600">
-                {Math.round(memoryInfo.usedJSHeapSize / 1024 / 1024)}MB
-              </div>
-              <div className="text-xs text-gray-500">Used</div>
+                      <div className="text-center">
+            <div className="text-lg font-bold text-blue-600">
+              {Math.round(memoryInfo.usedJSHeapSize / 1024 / 1024)}MB
             </div>
-            <div className="text-center">
-              <div className="text-lg font-bold text-green-600">
-                {Math.round(memoryInfo.totalJSHeapSize / 1024 / 1024)}MB
-              </div>
-              <div className="text-xs text-gray-500">Total</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Used</div>
+          </div>
+          <div className="text-center">
+            <div className="text-lg font-bold text-green-600">
+              {Math.round(memoryInfo.totalJSHeapSize / 1024 / 1024)}MB
             </div>
-            <div className="text-center">
-              <div className="text-lg font-bold text-purple-600">
-                {Math.round(memoryInfo.jsHeapSizeLimit / 1024 / 1024)}MB
-              </div>
-              <div className="text-xs text-gray-500">Limit</div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Total</div>
+          </div>
+          <div className="text-center">
+            <div className="text-lg font-bold text-purple-600">
+              {Math.round(memoryInfo.jsHeapSizeLimit / 1024 / 1024)}MB
             </div>
+            <div className="text-xs text-gray-600 dark:text-gray-400">Limit</div>
+          </div>
           </div>
         </div>
       )}

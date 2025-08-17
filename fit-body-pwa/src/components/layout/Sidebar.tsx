@@ -62,7 +62,7 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
             <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">FB</span>
             </div>
-            <span className="font-semibold text-lg text-gray-900 dark:text-white">
+            <span className="font-semibold text-lg text-gray-900 dark:text-white theme-text">
               Fit Body
             </span>
           </div>
@@ -86,10 +86,10 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 dark:text-white truncate">
+                <h3 className="font-semibold text-gray-900 dark:text-white truncate theme-text">
                   {user?.firstName || user?.username || 'Kullanıcı'}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                <p className="text-sm text-gray-600 dark:text-gray-400 truncate theme-text">
                   {user?.email || 'user@example.com'}
                 </p>
               </div>
@@ -107,12 +107,12 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
               <button
                 key={item.href}
                 onClick={() => handleNavigation(item.href)}
-                className={cn(
-                  'w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-left',
-                  isActive
-                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                )}
+                                 className={cn(
+                   'w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-left',
+                   isActive
+                     ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
+                     : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                 )}
               >
                 <Icon className={cn('w-5 h-5', item.color)} />
                 <span className="font-medium">{item.label}</span>
@@ -121,26 +121,26 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
           })}
         </nav>
 
-        {/* Quick Stats */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
-            Bu Hafta
-          </h4>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Antrenman</span>
-              <span className="font-semibold text-green-600">5/7</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Süre</span>
-              <span className="font-semibold text-blue-600">4.2s</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">Kalori</span>
-              <span className="font-semibold text-orange-600">1,250</span>
-            </div>
-          </div>
-        </div>
+                 {/* Quick Stats */}
+         <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+           <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-3">
+             Bu Hafta
+           </h4>
+           <div className="space-y-2">
+             <div className="flex items-center justify-between text-sm">
+               <span className="text-gray-700 dark:text-gray-300">Antrenman</span>
+               <span className="font-semibold text-green-600">5/7</span>
+             </div>
+             <div className="flex items-center justify-between text-sm">
+               <span className="text-gray-700 dark:text-gray-300">Süre</span>
+               <span className="font-semibold text-blue-600">4.2s</span>
+             </div>
+             <div className="flex items-center justify-between text-sm">
+               <span className="text-gray-700 dark:text-gray-300">Kalori</span>
+               <span className="font-semibold text-orange-600">1,250</span>
+             </div>
+           </div>
+         </div>
       </aside>
     </>
   );

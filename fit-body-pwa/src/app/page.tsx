@@ -22,7 +22,7 @@ export default function Home() {
   const router = useRouter();
   return (
     <MainLayout showNavigation={false}>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 theme-transition">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 theme-transition">
                       {/* Minimal Header */}
               <FadeIn direction="down" delay={0}>
                 <header className="flex items-center justify-between px-6 py-4">
