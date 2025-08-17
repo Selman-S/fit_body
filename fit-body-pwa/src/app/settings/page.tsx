@@ -1,5 +1,14 @@
 'use client';
 
+import { AccessibilitySettings } from '@/components/ui/AccessibilitySettings';
+import { KeyboardNavigation } from '@/components/ui/KeyboardNavigation';
+import { ColorContrast } from '@/components/ui/ColorContrast';
+import { 
+  Accessibility, 
+  Keyboard, 
+  Palette 
+} from 'lucide-react';
+
 export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -107,6 +116,46 @@ export default function SettingsPage() {
               <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors">
                 🗑️ Tüm Verileri Sil
               </button>
+            </div>
+          </div>
+
+          {/* Accessibility */}
+          <div className="bg-white rounded-lg shadow">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h2 className="text-lg font-medium text-gray-900 flex items-center gap-2">
+                ♿ Erişilebilirlik
+              </h2>
+            </div>
+            <div className="p-6 space-y-6">
+              <p className="text-sm text-gray-600">
+                Uygulamayı ihtiyaçlarınıza göre özelleştirin. WCAG 2.1 AA standartlarına uygun erişilebilirlik özellikleri.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="text-center p-4 border border-gray-200 rounded-lg">
+                  <Accessibility className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                  <h3 className="font-medium text-gray-900 mb-1">Erişilebilirlik Ayarları</h3>
+                  <p className="text-xs text-gray-600">Yüksek kontrast, büyük metin, hareket azaltma</p>
+                </div>
+                
+                <div className="text-center p-4 border border-gray-200 rounded-lg">
+                  <Keyboard className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                  <h3 className="font-medium text-gray-900 mb-1">Klavye Navigasyonu</h3>
+                  <p className="text-xs text-gray-600">Klavye kısayolları ve odak yönetimi</p>
+                </div>
+                
+                <div className="text-center p-4 border border-gray-200 rounded-lg">
+                  <Palette className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                  <h3 className="font-medium text-gray-900 mb-1">Renk Kontrastı</h3>
+                  <p className="text-xs text-gray-600">WCAG uyumlu renk kombinasyonları</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <AccessibilitySettings />
+                <KeyboardNavigation />
+                <ColorContrast />
+              </div>
             </div>
           </div>
         </div>

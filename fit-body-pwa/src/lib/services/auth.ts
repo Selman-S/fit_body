@@ -24,8 +24,10 @@ class AuthService {
   private readonly CURRENT_USER_KEY = 'fit_body_current_user';
   
   constructor() {
-    // Load current user from localStorage on initialization
-    this.loadCurrentUser();
+    // Only load current user if we're on the client side
+    if (typeof window !== 'undefined') {
+      this.loadCurrentUser();
+    }
   }
 
   // Load current user from localStorage

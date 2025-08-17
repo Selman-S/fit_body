@@ -11,6 +11,7 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   onClick?: () => void;
+  onFocus?: () => void;
   disabled?: boolean;
   loading?: boolean;
   fullWidth?: boolean;
@@ -25,6 +26,7 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'md',
   className = '',
   onClick,
+  onFocus,
   disabled = false,
   loading = false,
   fullWidth = false,
@@ -94,6 +96,7 @@ export const Button: React.FC<ButtonProps> = ({
         className
       )}
       onClick={handleClick}
+      onFocus={onFocus}
       disabled={disabled || loading}
       whileHover={!disabled && !loading ? { 
         scale: 1.02,

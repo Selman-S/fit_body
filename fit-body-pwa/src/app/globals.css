@@ -72,6 +72,12 @@
   --transition-fast: 150ms ease;
   --transition-normal: 300ms ease;
   --transition-slow: 500ms ease;
+  
+  /* Accessibility Variables */
+  --reduced-motion: no-preference;
+  --focus-ring-color: #0ea5e9;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
 }
 
 /* Dark Theme Colors */
@@ -92,6 +98,9 @@
   --shadow-light: rgba(0, 0, 0, 0.3);
   --shadow-medium: rgba(0, 0, 0, 0.4);
   --shadow-dark: rgba(0, 0, 0, 0.5);
+  
+  /* Focus ring for dark theme */
+  --focus-ring-color: #38bdf8;
 }
 
 /* Base Styles */
@@ -113,10 +122,115 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Focus Styles */
+/* Accessibility: Skip to main content */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--primary-600);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Accessibility: Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Accessibility: Focus styles */
 *:focus-visible {
-  outline: 2px solid var(--primary-500);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 4px;
+}
+
+/* Enhanced focus for interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+/* Accessibility: High contrast mode */
+.high-contrast {
+  --background: #000000;
+  --surface: #1a1a1a;
+  --on-background: #ffffff;
+  --on-surface: #ffffff;
+  --border-light: #ffffff;
+  --border-medium: #ffffff;
+  --border-dark: #ffffff;
+}
+
+.high-contrast [data-theme="dark"] {
+  --background: #ffffff;
+  --surface: #e5e5e5;
+  --on-background: #000000;
+  --on-surface: #000000;
+  --border-light: #000000;
+  --border-medium: #000000;
+  --border-dark: #000000;
+}
+
+/* Accessibility: Large text mode */
+.large-text {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.large-text h1 { font-size: 2.5rem; }
+.large-text h2 { font-size: 2rem; }
+.large-text h3 { font-size: 1.75rem; }
+.large-text h4 { font-size: 1.5rem; }
+.large-text h5 { font-size: 1.25rem; }
+.large-text h6 { font-size: 1.125rem; }
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Accessibility: Focus visible mode */
+.focus-visible *:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
 }
 
 /* Selection Styles */
@@ -235,4 +349,65 @@ body {
   :root {
     --container-padding: 2rem;
   }
+}
+
+/* Accessibility: Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+}
+
+/* Accessibility: High contrast focus for form elements */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: var(--focus-ring-color);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+/* Accessibility: Button focus states */
+button:focus-visible {
+  transform: translateY(0);
+  box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+}
+
+/* Accessibility: Link focus states */
+a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+/* Accessibility: Custom checkbox and radio focus */
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Accessibility: Table focus for keyboard navigation */
+table:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Accessibility: List focus for keyboard navigation */
+ul:focus-visible,
+ol:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }

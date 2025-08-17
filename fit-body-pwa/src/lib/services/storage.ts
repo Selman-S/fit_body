@@ -4,9 +4,7 @@
 class StorageService {
   private static instance: StorageService;
 
-  private constructor() {
-    // Private constructor to prevent direct instantiation
-  }
+  private constructor() {}
 
   static getInstance(): StorageService {
     if (!StorageService.instance) {
@@ -15,22 +13,34 @@ class StorageService {
     return StorageService.instance;
   }
 
-  // Generic CRUD operations
+  // Check if localStorage is available (client-side only)
+  private isLocalStorageAvailable(): boolean {
+    return typeof window !== 'undefined' && !!window.localStorage;
+  }
+
   set<T>(key: string, data: T): void {
+    if (!this.isLocalStorageAvailable()) {
+      console.warn('localStorage not available (SSR)');
+      return;
+    }
+
     try {
-      const wrappedData = {
+      const item = {
         data,
-        timestamp: new Date().toISOString(),
-        version: '1.0.0'
+        timestamp: Date.now(),
       };
-      localStorage.setItem(key, JSON.stringify(wrappedData));
+      localStorage.setItem(key, JSON.stringify(item));
     } catch (error) {
       console.error(`Storage set failed for key: ${key}`, error);
-      throw new Error('Storage quota exceeded');
     }
   }
 
   get<T>(key: string): T | null {
+    if (!this.isLocalStorageAvailable()) {
+      console.warn('localStorage not available (SSR)');
+      return null;
+    }
+
     try {
       const item = localStorage.getItem(key);
       if (!item) return null;
@@ -44,10 +54,18 @@ class StorageService {
   }
 
   remove(key: string): void {
+    if (!this.isLocalStorageAvailable()) {
+      console.warn('localStorage not available (SSR)');
+      return;
+    }
     localStorage.removeItem(key);
   }
 
   clear(): void {
+    if (!this.isLocalStorageAvailable()) {
+      console.warn('localStorage not available (SSR)');
+      return;
+    }
     localStorage.clear();
   }
 
@@ -109,6 +127,10 @@ class StorageService {
 
   // Storage size management
   getStorageSize(): number {
+    if (!this.isLocalStorageAvailable()) {
+      return 0;
+    }
+
     let total = 0;
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -122,6 +144,10 @@ class StorageService {
 
   // Export/Import functionality
   exportData(): string {
+    if (!this.isLocalStorageAvailable()) {
+      return JSON.stringify({});
+    }
+
     const data: Record<string, unknown> = {};
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -130,30 +156,44 @@ class StorageService {
         if (item) data[key] = item;
       }
     }
-    
-    return JSON.stringify({
-      exportDate: new Date().toISOString(),
-      version: '1.0.0',
-      data
-    }, null, 2);
+    return JSON.stringify(data, null, 2);
   }
 
-  importData(jsonData: string): void {
-    try {
-      const parsed = JSON.parse(jsonData);
-      
-      if (!parsed.data) {
-        throw new Error('Invalid import format');
-      }
+  importData(jsonData: string): boolean {
+    if (!this.isLocalStorageAvailable()) {
+      console.warn('localStorage not available (SSR)');
+      return false;
+    }
 
-      // Import new data
-      Object.entries(parsed.data).forEach(([key, value]) => {
-        this.set(key, value);
+    try {
+      const data = JSON.parse(jsonData);
+      Object.entries(data).forEach(([key, value]) => {
+        if (key.startsWith('fit_body_')) {
+          this.set(key, value);
+        }
       });
-      
+      return true;
     } catch (error) {
       console.error('Import failed:', error);
-      throw new Error('Failed to import data');
+      return false;
+    }
+  }
+
+  // Check storage quota
+  checkStorageQuota(): { used: number; available: number; percentage: number } {
+    if (!this.isLocalStorageAvailable()) {
+      return { used: 0, available: 0, percentage: 0 };
+    }
+
+    try {
+      const used = this.getStorageSize();
+      const available = 5 * 1024 * 1024; // 5MB typical localStorage limit
+      const percentage = (used / available) * 100;
+      
+      return { used, available, percentage };
+    } catch (error) {
+      console.error('Storage quota check failed:', error);
+      return { used: 0, available: 0, percentage: 0 };
     }
   }
 }

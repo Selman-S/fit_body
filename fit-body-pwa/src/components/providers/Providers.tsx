@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState } from 'react';
 import { ThemeProvider } from './ThemeProvider';
+import { ToastProvider } from '@/components/ui/Toast';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -30,8 +31,10 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        {children}
-        <ReactQueryDevtools initialIsOpen={false} />
+        <ToastProvider>
+          {children}
+          <ReactQueryDevtools initialIsOpen={false} />
+        </ToastProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

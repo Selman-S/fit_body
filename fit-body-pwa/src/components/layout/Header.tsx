@@ -6,6 +6,7 @@ import { useAuthStore } from '@/lib/stores/authStore';
 import { Card } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+// QuickAccessibilityToggle component removed - using full AccessibilitySettings instead
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -54,6 +55,8 @@ export function Header({ onMenuClick, isMobile }: HeaderProps) {
 
         {/* Right Section - User Actions */}
         <div className="flex items-center gap-2">
+          {/* Accessibility Toggle - Removed for now */}
+          
           {/* Theme Toggle */}
           <ThemeToggle variant="minimal" size="sm" />
           
