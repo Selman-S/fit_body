@@ -76,22 +76,36 @@ export default function WorkoutPage() {
       // Load default exercises if none exist
       exerciseService.loadDefaultExercises();
       
-      // Load default workout programs via workout service
+      // Load default workout programs via workout service ONLY
       workoutService.loadDefaultPrograms();
       
       // Get all exercises and programs
       const allExercises = exerciseService.getAllExerciseTypes();
       const allPrograms = workoutService.getAllWorkoutPrograms();
       
+      console.log('Loaded exercises:', allExercises.length);
+      console.log('Loaded programs:', allPrograms.length);
+      console.log('Program IDs:', allPrograms.map(p => ({ id: p.id, name: p.name })));
+      
+      // Check for duplicate programs
+      const uniquePrograms = allPrograms.filter((program, index, self) => 
+        index === self.findIndex(p => p.id === program.id)
+      );
+      
+      if (uniquePrograms.length !== allPrograms.length) {
+        console.warn(`⚠️ Found ${allPrograms.length - uniquePrograms.length} duplicate programs`);
+        console.log('Unique programs:', uniquePrograms.length);
+      }
+      
       // Get user's active program
       const userActiveProgram = workoutService.getActiveProgram(mockUserId);
       setActiveProgram(userActiveProgram);
       
       setExercises(allExercises);
-      setPrograms(allPrograms);
+      setPrograms(uniquePrograms); // Use unique programs only
       setFilteredExercises(allExercises);
       
-      console.log(`✅ Loaded ${allExercises.length} exercises and ${allPrograms.length} programs`);
+      console.log(`✅ Loaded ${allExercises.length} exercises and ${uniquePrograms.length} unique programs`);
       
     } catch (error) {
       console.error('Failed to load workout data:', error);
@@ -104,8 +118,15 @@ export default function WorkoutPage() {
   // Reset programs (clear localStorage and reload)
   const resetPrograms = () => {
     try {
+      console.log('🔄 Resetting workout programs...');
+      
       // Clear workout programs from localStorage
       localStorage.removeItem('fitbody_workout_programs');
+      
+      // Clear user programs as well
+      localStorage.removeItem('fitbody_user_programs');
+      
+      console.log('🗑️ Cleared workout programs from localStorage');
       
       // Reload data
       loadData();
@@ -133,6 +154,16 @@ export default function WorkoutPage() {
       // Create a mock user ID for now (in real app, get from auth store)
       const mockUserId = 'demo-user-123';
       
+      console.log('Starting workout for program ID:', programId);
+      
+      // Verify program exists before starting
+      const program = workoutService.getProgramById(programId);
+      if (!program) {
+        console.error('Program not found:', programId);
+        addToast({ type: 'error', message: 'Program bulunamadı!' });
+        return;
+      }
+      
       const session = workoutService.startWorkoutSession({
         userId: mockUserId,
         programId,
@@ -144,6 +175,7 @@ export default function WorkoutPage() {
       
       // Navigate to workout session page
       console.log('Started workout session:', session);
+      console.log('Redirecting to:', `/workout/session/${programId}`);
       
       // Redirect to workout session page
       router.push(`/workout/session/${programId}`);

@@ -102,14 +102,38 @@ export class WorkoutService {
   // Load default workout programs
   loadDefaultPrograms(): void {
     const existingPrograms = this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
-    if (existingPrograms.length > 0) return; // Already loaded
+    
+    // Check if we already have the expected number of programs (8 default programs)
+    if (existingPrograms.length >= 8) {
+      console.log(`ℹ️ Programs already loaded: ${existingPrograms.length} programs found (expected: 8)`);
+      
+      // Check for duplicates and clean them up
+      const uniquePrograms = existingPrograms.filter((program, index, self) => 
+        index === self.findIndex(p => p.name === program.name)
+      );
+      
+      if (uniquePrograms.length !== existingPrograms.length) {
+        console.log(`🧹 Cleaning up ${existingPrograms.length - uniquePrograms.length} duplicate programs...`);
+        this.storage.set(STORAGE_KEYS.WORKOUT_PROGRAMS, uniquePrograms);
+        console.log(`✅ Cleaned up programs: ${uniquePrograms.length} unique programs remaining`);
+      }
+      
+      return; // Already loaded and cleaned
+    }
 
     // Import programs from constants
     import('@/lib/constants/workout-programs').then(({ WORKOUT_PROGRAMS }) => {
+      console.log(`📥 Loading ${WORKOUT_PROGRAMS.length} default programs...`);
+      
+      // Clear existing programs first to avoid duplicates
+      this.storage.remove(STORAGE_KEYS.WORKOUT_PROGRAMS);
+      
       WORKOUT_PROGRAMS.forEach(program => {
         this.storage.addToCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS, program);
       });
-      console.log('Default workout programs loaded successfully');
+      
+      const finalPrograms = this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
+      console.log(`✅ Default workout programs loaded successfully: ${finalPrograms.length} programs`);
     }).catch(error => {
       console.error('Failed to load default programs:', error);
     });

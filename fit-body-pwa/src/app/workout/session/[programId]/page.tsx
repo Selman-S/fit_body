@@ -72,7 +72,28 @@ export default function WorkoutSessionPage() {
 
   // Get exercise type details
   const getExerciseDetails = useCallback((exerciseId: string): ExerciseType | null => {
-    return exerciseService.getExerciseById(exerciseId);
+    // Handle different exercise ID formats
+    let searchId = exerciseId;
+    
+    // If exerciseId starts with 'exercise-', remove the prefix
+    if (exerciseId.startsWith('exercise-')) {
+      searchId = exerciseId.replace('exercise-', '');
+    }
+    
+    // First try to find by exact ID
+    let exercise = exerciseService.getExerciseById(exerciseId);
+    
+    // If not found, try to find by name (fallback)
+    if (!exercise) {
+      const allExercises = exerciseService.getAllExerciseTypes();
+      exercise = allExercises.find(ex => 
+        ex.name.toLowerCase().includes(searchId.toLowerCase()) ||
+        ex.name.toLowerCase().replace(/\s+/g, '-').includes(searchId.toLowerCase())
+      ) || null;
+    }
+    
+    console.log(`🔍 Looking for exercise: ${exerciseId} -> ${searchId}, found:`, exercise?.name);
+    return exercise;
   }, []);
 
   // Load workout data
@@ -87,8 +108,13 @@ export default function WorkoutSessionPage() {
     const exercise = getCurrentExercise();
     if (exercise) {
       setCurrentExercise(exercise);
+      
+      // Get exercise details with better error handling
       const details = getExerciseDetails(exercise.exerciseTypeId);
       setExerciseDetails(details);
+      
+      console.log(`📝 Current exercise: ${exercise.exerciseTypeId}`);
+      console.log(`📝 Exercise details:`, details);
       
       // Set exercise time based on duration or reps
       if (exercise.durationSeconds) {
@@ -103,16 +129,17 @@ export default function WorkoutSessionPage() {
       setRestTime(exercise.restSeconds || userRestTime);
       setCurrentSet(1);
     }
-  }, [currentExerciseIndex, getCurrentExercise, getExerciseDetails]);
+  }, [currentExerciseIndex, getCurrentExercise, getExerciseDetails, user?.preferences?.workout?.defaultRestTime]);
 
   const loadWorkoutData = async () => {
     try {
       setIsLoading(true);
       
-      // Load program and today's exercises
-      const programData = exerciseService.getProgramById(programId);
+      // Load program and today's exercises using workoutService
+      const programData = workoutService.getProgramById(programId);
       if (!programData) {
-        console.error('Program not found');
+        console.error('Program not found for ID:', programId);
+        console.log('Available programs:', workoutService.getAllWorkoutPrograms());
         return;
       }
       
@@ -123,13 +150,15 @@ export default function WorkoutSessionPage() {
       const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
       const todayExs = programData.exercises.filter(ex => ex.dayOfProgram === dayOfWeek);
 
-      console.log(dayOfWeek);
-      console.log(programData);
+      console.log('Day of week:', dayOfWeek);
+      console.log('Program data:', programData);
+      console.log('Today exercises:', todayExs);
       setTodayExercises(todayExs);
       
       // Check if user has any exercises for today
       if (todayExs.length === 0) {
         // No exercises for today, but program exists
+        console.log('No exercises scheduled for today');
         return;
       }
       
@@ -438,11 +467,19 @@ export default function WorkoutSessionPage() {
           </Button>
                      <div className="text-center">
              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-               {exerciseDetails?.name}
+               {exerciseDetails?.name || 'Egzersiz Yükleniyor...'}
              </h1>
              <p className="text-sm text-gray-600 dark:text-gray-400">
                Set {currentSet} / {currentExercise?.sets || 1}
              </p>
+             {exerciseDetails && (
+               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                 {exerciseDetails.category === 'strength' ? 'Güç' : 
+                  exerciseDetails.category === 'cardio' ? 'Kardiyo' : 
+                  exerciseDetails.category === 'flexibility' ? 'Esneklik' : 'Denge'} • 
+                 {exerciseDetails.muscleGroups?.join(', ')}
+               </p>
+             )}
            </div>
           <Button
             variant={isPaused ? "primary" : "secondary"}
@@ -458,21 +495,39 @@ export default function WorkoutSessionPage() {
         <div className="max-w-md mx-auto space-y-6">
           {/* Current Exercise Display */}
           <Card className="p-6 text-center">
-            <div className="text-6xl mb-4">
-              {exerciseDetails?.category === 'strength' ? '🏋️' : 
-               exerciseDetails?.category === 'cardio' ? '🏃' : 
-               exerciseDetails?.category === 'flexibility' ? '🧘' : '⚖️'}
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-              {exerciseDetails?.name}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              {exerciseDetails?.instructions}
-            </p>
-            <div className="flex justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-              <span>💪 {exerciseDetails?.muscleGroups?.join(', ')}</span>
-              <span>⭐ {exerciseDetails?.difficultyLevel}/5</span>
-            </div>
+            {exerciseDetails ? (
+              <>
+                <div className="text-6xl mb-4">
+                  {exerciseDetails.category === 'strength' ? '🏋️' : 
+                   exerciseDetails.category === 'cardio' ? '🏃' : 
+                   exerciseDetails.category === 'flexibility' ? '🧘' : '⚖️'}
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                  {exerciseDetails.name}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm leading-relaxed">
+                  {exerciseDetails.instructions}
+                </p>
+                <div className="flex justify-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  <span>💪 {exerciseDetails.muscleGroups?.join(', ')}</span>
+                  <span>⭐ {exerciseDetails.difficultyLevel}/5</span>
+                </div>
+                {exerciseDetails.tips && (
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      💡 <strong>İpucu:</strong> {exerciseDetails.tips}
+                    </p>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="animate-pulse">
+                <div className="text-6xl mb-4">🏋️</div>
+                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-4"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3 mx-auto"></div>
+              </div>
+            )}
           </Card>
 
                      {/* Timer Display - Circular Progress */}

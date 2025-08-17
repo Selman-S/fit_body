@@ -57,19 +57,10 @@ export class ExerciseService {
     console.log(`✅ ${EXERCISE_DATA.length} egzersiz yüklendi!`);
   }
 
-  // Default programları yükle
+  // Default programları yükle - Artık sadece WorkoutService kullanıyor
   loadDefaultPrograms(): void {
-    const existingPrograms = storage.getCollection<WorkoutProgram>('fitbody_workout_programs');
-    if (existingPrograms.length > 0) return; // Already loaded
-
-    // Import workout service to load programs
-    import('./workout').then(({ WorkoutService }) => {
-      const workoutService = new WorkoutService();
-      workoutService.loadDefaultPrograms();
-      console.log('✅ Default workout programs loaded via workout service!');
-    }).catch(error => {
-      console.error('Failed to load default programs:', error);
-    });
+    // Bu method artık kullanılmıyor - programlar WorkoutService tarafından yükleniyor
+    console.log('ℹ️ Programs are now loaded via WorkoutService only');
   }
 
   // Get all workout programs
