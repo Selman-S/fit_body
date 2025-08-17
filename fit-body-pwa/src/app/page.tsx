@@ -2,6 +2,7 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { PWAInstallButton, PWAUpdateNotification } from '@/components/ui/PWAInstallButton';
+import { PerformanceDashboard } from '@/components/ui/PerformanceDashboard';
 import { 
   Dumbbell, 
   TrendingUp, 
@@ -46,8 +47,13 @@ export default function Home() {
             </div>
             
             {/* PWA Install Button */}
-            <PWAInstallButton  variant="banner" />
+            <PWAInstallButton variant="banner" />
           </div>
+        </div>
+
+        {/* Performance Dashboard */}
+        <div className="max-w-6xl mx-auto px-4 mb-16">
+          <PerformanceDashboard />
         </div>
 
         {/* Features Grid */}
