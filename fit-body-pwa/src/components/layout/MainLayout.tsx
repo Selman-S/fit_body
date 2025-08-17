@@ -32,12 +32,7 @@ export function MainLayout({ children, showNavigation = true }: MainLayoutProps)
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Close sidebar when switching to mobile
-  useEffect(() => {
-    if (isMobile && isSidebarOpen) {
-      setIsSidebarOpen(false);
-    }
-  }, [isMobile, isSidebarOpen]);
+  // Close sidebar when switching to mobile - REMOVED (causing infinite loop)
 
   // Don't show navigation for auth pages
   if (!showNavigation || !isAuthenticated) {

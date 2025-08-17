@@ -88,26 +88,7 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
          </div>
            )}
 
-        {/* User Profile Card */}
-        <div className="p-4 border-b border-gray-200  dark:border-gray-700">
-          <Card className="p-4 bg-gradient-to-br sidebar-profile-name from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">
-                  {user?.firstName?.[0] || user?.username?.[0] || 'U'}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 dark:text-white truncate theme-text">
-                  {user?.firstName || user?.username || 'Kullanıcı'}
-                </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 truncate theme-text">
-                  {user?.email || 'user@example.com'}
-                </p>
-              </div>
-            </div>
-          </Card>
-        </div>
+
 
         {/* Navigation Menu */}
         <nav className="flex-1 p-4 space-y-2">
