@@ -141,8 +141,20 @@ export class WorkoutService {
 
   // Get program by ID
   getProgramById(programId: string): WorkoutProgram | null {
+    // First check regular programs
     const programs = this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
-    return programs.find(p => p.id === programId) || null;
+    let program = programs.find(p => p.id === programId);
+    
+    // If not found, check temporary programs
+    if (!program) {
+      const tempPrograms = this.storage.getCollection<WorkoutProgram>('temp_workout_programs');
+      const tempProgram = tempPrograms.find(p => p.id === programId);
+      if (tempProgram) {
+        program = tempProgram;
+      }
+    }
+    
+    return program || null;
   }
 
   // Get programs by type
@@ -236,6 +248,22 @@ export class WorkoutService {
       status: 'active',
       currentWeek: 1,
     });
+  }
+
+  // Create temporary program for customization
+  createTemporaryProgram(program: WorkoutProgram): WorkoutProgram {
+    const tempProgram = {
+      ...program,
+      id: program.id,
+      isCustomized: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    
+    // Store in temporary programs collection
+    this.storage.addToCollection<WorkoutProgram>('temp_workout_programs', tempProgram);
+    
+    return tempProgram;
   }
 }
 

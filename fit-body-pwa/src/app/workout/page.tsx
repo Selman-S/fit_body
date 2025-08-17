@@ -24,6 +24,9 @@ export default function WorkoutPage() {
   const [selectedDifficulty, setSelectedDifficulty] = useState<number>(0);
   const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<ExerciseType | null>(null);
+  const [isProgramModalOpen, setIsProgramModalOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<WorkoutProgram | null>(null);
+  const [customizedProgram, setCustomizedProgram] = useState<WorkoutProgram | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeProgram, setActiveProgram] = useState<{ programId: string; startDate: string; currentWeek: number } | null>(null);
   
@@ -146,6 +149,65 @@ export default function WorkoutPage() {
     setSelectedExercise(exercise);
     setIsExerciseModalOpen(true);
     console.log('State updated, modal should open');
+  };
+
+  // Handle program preview
+  const handleProgramPreview = (program: WorkoutProgram) => {
+    console.log('Program preview clicked:', program);
+    setSelectedProgram(program);
+    
+    // Create a copy for customization with custom properties
+    const programCopy = {
+      ...program,
+      exercises: program.exercises.map(ex => ({
+        ...ex,
+        customSets: ex.sets,
+        customReps: ex.reps || 10,
+        customDuration: ex.durationSeconds || 30,
+        customRest: ex.restSeconds || 60
+      }))
+    };
+    
+    setCustomizedProgram(programCopy);
+    setIsProgramModalOpen(true);
+  };
+
+  // Start workout with customized program
+  const startWorkoutWithCustomProgram = async (customizedProgram: WorkoutProgram) => {
+    try {
+      // Create a mock user ID for now (in real app, get from auth store)
+      const mockUserId = 'demo-user-123';
+      
+      console.log('Starting customized workout for program:', customizedProgram.name);
+      
+      // Create a temporary program with customizations
+      const tempProgramId = `temp-${Date.now()}`;
+      const tempProgram = {
+        ...customizedProgram,
+        id: tempProgramId,
+        isCustomized: true
+      };
+      
+      // Store temporary program
+      workoutService.createTemporaryProgram(tempProgram);
+      
+      // Start workout session
+      const session = workoutService.startWorkoutSession({
+        userId: mockUserId,
+        programId: tempProgramId,
+        sessionDate: new Date().toISOString().split('T')[0],
+        startTime: new Date().toISOString(),
+      });
+      
+      addToast({ type: 'success', message: 'Özelleştirilmiş program başlatıldı!' });
+      
+      // Navigate to workout session page
+      router.push(`/workout/session/${tempProgramId}`);
+      
+    } catch (error) {
+      console.error('Failed to start customized workout:', error);
+      addToast({ type: 'error', message: 'Özelleştirilmiş program başlatılamadı' });
+    }
   };
 
   // Start workout session
@@ -378,13 +440,22 @@ export default function WorkoutPage() {
                     </div>
                   </div>
                   
-                  <Button
-                    variant="primary"
-                    onClick={() => startWorkout(program.id)}
-                    className="w-full"
-                  >
-                    Programı Başlat
-                  </Button>
+                                     <div className="flex gap-2">
+                     <Button
+                       variant="secondary"
+                       onClick={() => handleProgramPreview(program)}
+                       className="flex-1"
+                     >
+                       👁️ Programı Gör
+                     </Button>
+                     <Button
+                       variant="primary"
+                       onClick={() => startWorkout(program.id)}
+                       className="flex-1"
+                     >
+                       🚀 Programı Başlat
+                     </Button>
+                   </div>
                 </Card>
               ))}
             </div>
@@ -447,82 +518,305 @@ export default function WorkoutPage() {
             )}
           </div>
 
-          {/* Exercise Detail Modal */}
-          <Modal
-            isOpen={isExerciseModalOpen}
-            onClose={() => setIsExerciseModalOpen(false)}
-            size="lg"
-            title={selectedExercise?.name}
-          >
-            {selectedExercise && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="text-4xl">
-                    {getCategoryIcon(selectedExercise.category)}
-                  </div>
+                     {/* Exercise Detail Modal */}
+           <Modal
+             isOpen={isExerciseModalOpen}
+             onClose={() => setIsExerciseModalOpen(false)}
+             size="lg"
+             title={selectedExercise?.name}
+           >
+             {selectedExercise && (
+               <div className="space-y-4">
+                 <div className="flex items-center gap-4">
+                   <div className="text-4xl">
+                     {getCategoryIcon(selectedExercise.category)}
+                   </div>
+                   <div>
+                     <div className="text-sm text-gray-500 dark:text-gray-400">
+                       {selectedExercise.category === 'strength' ? 'Güç' : 
+                        selectedExercise.category === 'cardio' ? 'Kardiyo' : 
+                        selectedExercise.category === 'flexibility' ? 'Esneklik' : 
+                        selectedExercise.category === 'balance' ? 'Denge' : selectedExercise.category} • Seviye {selectedExercise.difficultyLevel}
+                     </div>
+                     <div className="text-sm text-gray-500 dark:text-gray-400">
+                       {selectedExercise.muscleGroups.join(', ')}
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <div>
+                   <h4 className="font-medium text-gray-900 dark:text-white mb-2">Talimatlar</h4>
+                   <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                     {selectedExercise.instructions}
+                   </p>
+                 </div>
+                 
+                 {selectedExercise.tips && (
+                   <div>
+                     <h4 className="font-medium text-gray-900 dark:text-white mb-2">İpuçları</h4>
+                     <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                       {selectedExercise.tips}
+                     </p>
+                   </div>
+                 )}
+                 
+                 <div className="grid grid-cols-2 gap-4 text-sm">
+                   <div>
+                     <span className="font-medium text-gray-900 dark:text-white">Süre:</span>
+                     <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.durationEstimate}s</span>
+                   </div>
+                   <div>
+                     <span className="text-medium text-gray-900 dark:text-white">Kalori/dakika:</span>
+                     <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.caloriesPerMinute}</span>
+                   </div>
+                 </div>
+                 
+                 <div className="flex gap-3 pt-4">
+                   <Button
+                     variant="primary"
+                     onClick={() => {
+                       // TODO: Add to workout program
+                       addToast({ type: 'success', message: 'Egzersiz antrenmana eklendi!' });
+                       setIsExerciseModalOpen(false);
+                     }}
+                     className="flex-1"
+                   >
+                     Antrenmana Ekle
+                   </Button>
+                   <Button
+                     variant="secondary"
+                     onClick={() => setIsExerciseModalOpen(false)}
+                     className="flex-1"
+                   >
+                     Kapat
+                   </Button>
+                 </div>
+               </div>
+             )}
+           </Modal>
+
+           {/* Program Detail Modal */}
+           <Modal
+             isOpen={isProgramModalOpen}
+             onClose={() => setIsProgramModalOpen(false)}
+             size="xl"
+             title={`${selectedProgram?.name} - Program Detayları`}
+           >
+             {customizedProgram && (
+               <div className="space-y-6">
+                 {/* Program Overview */}
+                 <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                   <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Program Bilgileri</h3>
+                   <div className="grid grid-cols-2 gap-4 text-sm text-blue-700 dark:text-blue-300">
+                     <div>
+                       <span className="font-medium">Tür:</span> {customizedProgram.programType === 'mixed' ? 'Karma' : customizedProgram.programType}
+                     </div>
+                     <div>
+                       <span className="font-medium">Zorluk:</span> {customizedProgram.difficultyLevel}/5
+                     </div>
+                     <div>
+                       <span className="font-medium">Süre:</span> {customizedProgram.estimatedDuration} dakika
+                     </div>
+                     <div>
+                       <span className="font-medium">Gün/Hafta:</span> {customizedProgram.daysPerWeek}
+                     </div>
+                   </div>
+                 </div>
+
+                                   {/* Exercise List with Customization */}
                   <div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {selectedExercise.category === 'strength' ? 'Güç' : 
-                       selectedExercise.category === 'cardio' ? 'Kardiyo' : 
-                       selectedExercise.category === 'flexibility' ? 'Esneklik' : 
-                       selectedExercise.category === 'balance' ? 'Denge' : selectedExercise.category} • Seviye {selectedExercise.difficultyLevel}
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-4">Egzersizler ve Ayarlar</h3>
+                    
+                    {/* Debug Info */}
+                    <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg mb-4">
+                      <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                        <strong>Debug:</strong> Program egzersizleri: {customizedProgram.exercises.length} adet
+                      </p>
+                      <p className="text-xs text-yellow-700 dark:text-yellow-300">
+                        <strong>Exercise IDs:</strong> {customizedProgram.exercises.map(ex => ex.exerciseTypeId).join(', ')}
+                      </p>
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {selectedExercise.muscleGroups.join(', ')}
-                    </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Talimatlar</h4>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                    {selectedExercise.instructions}
-                  </p>
-                </div>
-                
-                {selectedExercise.tips && (
-                  <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">İpuçları</h4>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                      {selectedExercise.tips}
-                    </p>
-                  </div>
-                )}
-                
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="font-medium text-gray-900 dark:text-white">Süre:</span>
-                    <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.durationEstimate}s</span>
-                  </div>
-                  <div>
-                    <span className="font-medium text-gray-900 dark:text-white">Kalori/dakika:</span>
-                    <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.caloriesPerMinute}</span>
-                  </div>
-                </div>
-                
-                <div className="flex gap-3 pt-4">
-                  <Button
-                    variant="primary"
-                    onClick={() => {
-                      // TODO: Add to workout program
-                      addToast({ type: 'success', message: 'Egzersiz antrenmana eklendi!' });
-                      setIsExerciseModalOpen(false);
-                    }}
-                    className="flex-1"
-                  >
-                    Antrenmana Ekle
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => setIsExerciseModalOpen(false)}
-                    className="flex-1"
-                  >
-                    Kapat
-                  </Button>
-                </div>
-              </div>
-            )}
-          </Modal>
+                    
+                    <div className="space-y-4 max-h-96 overflow-y-auto">
+                      {customizedProgram.exercises.map((exercise, index) => {
+                        console.log(`🔍 Looking for exercise with ID: ${exercise.exerciseTypeId}`);
+                        const exerciseDetails = exerciseService.getExerciseById(exercise.exerciseTypeId);
+                        console.log(`✅ Found exercise:`, exerciseDetails);
+                        
+                        if (!exerciseDetails) {
+                          console.warn(`❌ Exercise not found for ID: ${exercise.exerciseTypeId}`);
+                          return (
+                            <div key={exercise.id} className="border border-red-200 dark:border-red-700 rounded-lg p-4 bg-red-50 dark:bg-red-900/20">
+                              <p className="text-red-600 dark:text-red-400 text-sm">
+                                <strong>Egzersiz bulunamadı:</strong> {exercise.exerciseTypeId}
+                              </p>
+                            </div>
+                          );
+                        }
+                        
+                        return (
+                         <div key={exercise.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                           <div className="flex items-start justify-between mb-3">
+                             <div className="flex-1">
+                               <h4 className="font-medium text-gray-900 dark:text-white">
+                                 {index + 1}. {exerciseDetails.name}
+                               </h4>
+                               <p className="text-sm text-gray-600 dark:text-gray-400">
+                                 {exerciseDetails.muscleGroups.join(', ')} • {exerciseDetails.category === 'strength' ? 'Güç' : exerciseDetails.category}
+                               </p>
+                             </div>
+                             <div className="text-2xl">
+                               {exerciseDetails.category === 'strength' ? '🏋️' : 
+                                exerciseDetails.category === 'cardio' ? '🏃' : 
+                                exerciseDetails.category === 'flexibility' ? '🧘' : '⚖️'}
+                             </div>
+                           </div>
+                           
+                           {/* Exercise Settings */}
+                           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                             {/* Sets */}
+                             <div>
+                               <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                 Set Sayısı
+                               </label>
+                               <input
+                                 type="number"
+                                 min="1"
+                                 max="10"
+                                 value={exercise.customSets || exercise.sets}
+                                 onChange={(e) => {
+                                   const newValue = parseInt(e.target.value);
+                                   setCustomizedProgram(prev => prev ? {
+                                     ...prev,
+                                     exercises: prev.exercises.map((ex, i) => 
+                                       i === index ? { ...ex, customSets: newValue } : ex
+                                     )
+                                   } : null);
+                                 }}
+                                 className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                               />
+                             </div>
+                             
+                             {/* Reps */}
+                             <div>
+                               <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                 Tekrar
+                               </label>
+                               <input
+                                 type="number"
+                                 min="5"
+                                 max="50"
+                                 value={exercise.customReps || exercise.reps || 10}
+                                 onChange={(e) => {
+                                   const newValue = parseInt(e.target.value);
+                                   setCustomizedProgram(prev => prev ? {
+                                     ...prev,
+                                     exercises: prev.exercises.map((ex, i) => 
+                                       i === index ? { ...ex, customReps: newValue } : ex
+                                     )
+                                   } : null);
+                                 }}
+                                 className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                               />
+                             </div>
+                             
+                             {/* Duration */}
+                             <div>
+                               <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                 Süre (sn)
+                               </label>
+                               <input
+                                 type="number"
+                                 min="10"
+                                 max="300"
+                                 value={exercise.customDuration || exercise.durationSeconds || 30}
+                                 onChange={(e) => {
+                                   const newValue = parseInt(e.target.value);
+                                   setCustomizedProgram(prev => prev ? {
+                                     ...prev,
+                                     exercises: prev.exercises.map((ex, i) => 
+                                       i === index ? { ...ex, customDuration: newValue } : ex
+                                     )
+                                   } : null);
+                                 }}
+                                 className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                               />
+                             </div>
+                             
+                             {/* Rest */}
+                             <div>
+                               <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                 Dinlenme (sn)
+                               </label>
+                               <input
+                                 type="number"
+                                 min="15"
+                                 max="180"
+                                 value={exercise.customRest || exercise.restSeconds || 60}
+                                 onChange={(e) => {
+                                   const newValue = parseInt(e.target.value);
+                                   setCustomizedProgram(prev => prev ? {
+                                     ...prev,
+                                     exercises: prev.exercises.map((ex, i) => 
+                                       i === index ? { ...ex, customRest: newValue } : ex
+                                     )
+                                   } : null);
+                                 }}
+                                 className="w-full px-2 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                               />
+                             </div>
+                           </div>
+                           
+                           {/* Exercise Instructions */}
+                           <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded">
+                             <p className="text-xs text-gray-600 dark:text-gray-400">
+                               <strong>Talimat:</strong> {exerciseDetails.instructions}
+                             </p>
+                           </div>
+                         </div>
+                       );
+                     })}
+                   </div>
+                 </div>
+
+                 {/* Action Buttons */}
+                 <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                   <Button
+                     variant="secondary"
+                     onClick={() => setIsProgramModalOpen(false)}
+                     className="flex-1"
+                   >
+                     İptal
+                   </Button>
+                   <Button
+                     variant="primary"
+                     onClick={() => {
+                       if (customizedProgram) {
+                         // Apply customizations and start workout
+                         const updatedProgram = {
+                           ...customizedProgram,
+                           exercises: customizedProgram.exercises.map(ex => ({
+                             ...ex,
+                             sets: ex.customSets || ex.sets,
+                             reps: ex.customReps || ex.reps,
+                             durationSeconds: ex.customDuration || ex.durationSeconds,
+                             restSeconds: ex.customRest || ex.restSeconds
+                           }))
+                         };
+                         
+                         // Start workout with customized program
+                         startWorkoutWithCustomProgram(updatedProgram);
+                         setIsProgramModalOpen(false);
+                       }
+                     }}
+                     className="flex-1"
+                   >
+                     🚀 Özelleştirilmiş Programı Başlat
+                   </Button>
+                 </div>
+               </div>
+             )}
+           </Modal>
         </div>
       </MainLayout>
     </AuthGuard>

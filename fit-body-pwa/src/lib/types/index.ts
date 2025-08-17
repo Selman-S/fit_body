@@ -74,6 +74,11 @@ export interface ProgramExercise {
   restSeconds: number;
   weightSuggestion?: number; // kg
   notes?: string;
+  // Custom properties for program customization
+  customSets?: number;
+  customReps?: number;
+  customDuration?: number;
+  customRest?: number;
 }
 
 // Workout Program Definition

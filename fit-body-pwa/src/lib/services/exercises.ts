@@ -41,7 +41,28 @@ export class ExerciseService {
   // ID ile egzersiz getir
   getExerciseById(id: string): ExerciseType | null {
     const exercises = storage.getCollection<ExerciseType>('fitbody_exercise_types');
-    return exercises.find(ex => ex.id === id) || null;
+    
+    // First try exact match
+    let exercise = exercises.find(ex => ex.id === id);
+    
+    // If not found, try different ID formats
+    if (!exercise) {
+      // Remove 'exercise-' prefix if present
+      const cleanId = id.replace(/^exercise-/, '');
+      
+      // Try to find by clean ID
+      exercise = exercises.find(ex => ex.id === cleanId);
+      
+      // If still not found, try to find by name (fallback)
+      if (!exercise) {
+        exercise = exercises.find(ex => 
+          ex.name.toLowerCase().replace(/\s+/g, '-') === cleanId.toLowerCase() ||
+          ex.name.toLowerCase().replace(/\s+/g, '-').includes(cleanId.toLowerCase())
+        );
+      }
+    }
+    
+    return exercise || null;
   }
   
   // Default egzersizleri yükle (yeni EXERCISE_DATA'dan)
