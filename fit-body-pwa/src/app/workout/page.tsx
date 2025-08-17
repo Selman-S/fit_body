@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -26,6 +27,7 @@ export default function WorkoutPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeProgram, setActiveProgram] = useState<{ programId: string; startDate: string; currentWeek: number } | null>(null);
   
+  const router = useRouter();
   const { addToast } = useToast();
   const exerciseService = new ExerciseService();
   const workoutService = new WorkoutService();
@@ -68,6 +70,9 @@ export default function WorkoutPage() {
       // Load default exercises if none exist
       exerciseService.loadDefaultExercises();
       
+      // Force reload programs to get updated structure
+      exerciseService.loadDefaultPrograms();
+      
       // Get all exercises and programs
       const allExercises = exerciseService.getAllExerciseTypes();
       const allPrograms = workoutService.getAllWorkoutPrograms();
@@ -109,8 +114,11 @@ export default function WorkoutPage() {
       
       addToast({ type: 'success', message: 'Workout session started!' });
       
-      // TODO: Navigate to workout session page
+      // Navigate to workout session page
       console.log('Started workout session:', session);
+      
+      // Redirect to workout session page
+      router.push(`/workout/session/${programId}`);
       
     } catch (error) {
       console.error('Failed to start workout:', error);

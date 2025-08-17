@@ -56,6 +56,8 @@ export default function WorkoutSessionPage() {
       
       // Load program and today's exercises
       const programData = exerciseService.getProgramById(programId);
+      console.log(programData);
+      
       if (!programData) {
         console.error('Program not found');
         return;
@@ -68,6 +70,9 @@ export default function WorkoutSessionPage() {
       const dayOfWeek = today.getDay() || 7; // Sunday = 7
       const todayExs = programData.exercises.filter(ex => ex.dayOfProgram === dayOfWeek);
       setTodayExercises(todayExs);
+      console.log(dayOfWeek);
+      console.log(todayExs);
+      
       
       // Check if user has any exercises for today
       if (todayExs.length === 0) {

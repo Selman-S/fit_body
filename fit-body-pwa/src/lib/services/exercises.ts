@@ -180,18 +180,23 @@ export class ExerciseService {
       totalWeeks: 4,
       isDefault: true,
       exercises: [
-        // Pazartesi - Alt Vücut
+        // Pazar - Core & Flexibility (Day 0)
+        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Plank')?.id || '', dayOfProgram: 7, exerciseOrder: 1, sets: 3, durationSeconds: 30, restSeconds: 60 },
+        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Russian Twist')?.id || '', dayOfProgram: 7, exerciseOrder: 2, sets: 3, reps: 20, restSeconds: 45 },
+        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Glute Bridge')?.id || '', dayOfProgram: 7, exerciseOrder: 3, sets: 3, reps: 15, restSeconds: 45 },
+        
+        // Pazartesi - Alt Vücut (Day 1)
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Squat')?.id || '', dayOfProgram: 1, exerciseOrder: 1, sets: 3, reps: 12, restSeconds: 60 },
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Lunge')?.id || '', dayOfProgram: 1, exerciseOrder: 2, sets: 3, reps: 12, restSeconds: 60 },
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Glute Bridge')?.id || '', dayOfProgram: 1, exerciseOrder: 3, sets: 3, reps: 15, restSeconds: 45 },
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Plank')?.id || '', dayOfProgram: 1, exerciseOrder: 4, sets: 3, durationSeconds: 30, restSeconds: 60 },
         
-        // Çarşamba - Üst Vücut
+        // Çarşamba - Üst Vücut (Day 3)
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Push-up')?.id || '', dayOfProgram: 3, exerciseOrder: 1, sets: 3, reps: 12, restSeconds: 60 },
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Plank')?.id || '', dayOfProgram: 3, exerciseOrder: 2, sets: 3, durationSeconds: 30, restSeconds: 60 },
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Russian Twist')?.id || '', dayOfProgram: 3, exerciseOrder: 3, sets: 3, reps: 20, restSeconds: 45 },
         
-        // Cuma - Full Body
+        // Cuma - Full Body (Day 5)
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Burpee')?.id || '', dayOfProgram: 5, exerciseOrder: 1, sets: 3, reps: 8, restSeconds: 90 },
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Squat')?.id || '', dayOfProgram: 5, exerciseOrder: 2, sets: 3, reps: 15, restSeconds: 60 },
         { id: crypto.randomUUID(), exerciseTypeId: findExercise('Mountain Climbers')?.id || '', dayOfProgram: 5, exerciseOrder: 3, sets: 3, durationSeconds: 30, restSeconds: 60 },

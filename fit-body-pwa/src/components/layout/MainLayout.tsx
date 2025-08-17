@@ -18,7 +18,6 @@ export function MainLayout({ children, showNavigation = true }: MainLayoutProps)
   
   // Debug state - sadece state değiştiğinde
   useEffect(() => {
-    console.log('MainLayout state changed:', { isSidebarOpen, isMobile, isAuthenticated });
   }, [isSidebarOpen, isMobile, isAuthenticated]);
 
   // Responsive breakpoint detection
@@ -48,7 +47,6 @@ export function MainLayout({ children, showNavigation = true }: MainLayoutProps)
       {/* Header - Always visible */}
       <Header 
         onMenuClick={() => {
-          console.log('Hamburger clicked! Setting sidebar to open');
           setIsSidebarOpen(true);
         }}
         isMobile={isMobile}
