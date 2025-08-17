@@ -62,6 +62,12 @@ export default function WorkoutPage() {
     setFilteredExercises(filtered);
   }, [exercises, searchTerm, selectedCategory, selectedDifficulty]);
 
+  // Debug modal state changes
+  useEffect(() => {
+    console.log('Modal state changed - isExerciseModalOpen:', isExerciseModalOpen);
+    console.log('Modal state changed - selectedExercise:', selectedExercise);
+  }, [isExerciseModalOpen, selectedExercise]);
+
   // Load exercises and workout programs from localStorage
   const loadData = async () => {
     try {
@@ -87,7 +93,7 @@ export default function WorkoutPage() {
       
     } catch (error) {
       console.error('Failed to load workout data:', error);
-      addToast({ type: 'error', message: 'Failed to load workout data' });
+      addToast({ type: 'error', message: 'Antrenman verileri yüklenemedi' });
     } finally {
       setIsLoading(false);
     }
@@ -102,7 +108,7 @@ export default function WorkoutPage() {
       // Reload data
       loadData();
       
-      addToast({ type: 'success', message: 'Programs reset successfully!' });
+      addToast({ type: 'success', message: 'Programlar başarıyla sıfırlandı!' });
     } catch (error) {
       console.error('Failed to reset programs:', error);
       addToast({ type: 'error', message: 'Failed to reset programs' });
@@ -111,8 +117,12 @@ export default function WorkoutPage() {
 
   // Handle exercise selection
   const handleExerciseClick = (exercise: ExerciseType) => {
+    console.log('Exercise clicked:', exercise);
+    console.log('Setting selectedExercise to:', exercise);
+    console.log('Setting isExerciseModalOpen to true');
     setSelectedExercise(exercise);
     setIsExerciseModalOpen(true);
+    console.log('State updated, modal should open');
   };
 
   // Start workout session
@@ -128,7 +138,7 @@ export default function WorkoutPage() {
         startTime: new Date().toISOString(),
       });
       
-      addToast({ type: 'success', message: 'Workout session started!' });
+      addToast({ type: 'success', message: 'Antrenman oturumu başlatıldı!' });
       
       // Navigate to workout session page
       console.log('Started workout session:', session);
@@ -138,7 +148,7 @@ export default function WorkoutPage() {
       
     } catch (error) {
       console.error('Failed to start workout:', error);
-      addToast({ type: 'error', message: 'Failed to start workout session' });
+      addToast({ type: 'error', message: 'Antrenman oturumu başlatılamadı' });
     }
   };
 
@@ -179,10 +189,10 @@ export default function WorkoutPage() {
           {/* Page Header */}
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              💪 Workout Center
+              💪 Antrenman Merkezi
             </h1>
             <p className="text-gray-600 dark:text-gray-300 mt-2">
-              Choose your exercises and start your fitness journey
+              Egzersizlerini seç ve fitness yolculuğuna başla
             </p>
           </div>
 
@@ -193,7 +203,7 @@ export default function WorkoutPage() {
               <div className="md:col-span-2">
                 <Input
                   type="text"
-                  placeholder="Search exercises..."
+                  placeholder="Egzersiz ara..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full"
@@ -207,11 +217,11 @@ export default function WorkoutPage() {
                   onChange={(e) => setSelectedCategory(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="all">All Categories</option>
-                  <option value="strength">Strength</option>
-                  <option value="cardio">Cardio</option>
-                  <option value="flexibility">Flexibility</option>
-                  <option value="balance">Balance</option>
+                  <option value="all">Tüm Kategoriler</option>
+                  <option value="strength">Güç</option>
+                  <option value="cardio">Kardiyo</option>
+                  <option value="flexibility">Esneklik</option>
+                  <option value="balance">Denge</option>
                 </select>
               </div>
               
@@ -222,12 +232,12 @@ export default function WorkoutPage() {
                   onChange={(e) => setSelectedDifficulty(Number(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value={0}>All Difficulties</option>
-                  <option value={1}>Beginner</option>
-                  <option value={2}>Easy</option>
-                  <option value={3}>Medium</option>
-                  <option value={4}>Hard</option>
-                  <option value={5}>Expert</option>
+                  <option value={0}>Tüm Zorluklar</option>
+                  <option value={1}>Başlangıç</option>
+                  <option value={2}>Kolay</option>
+                  <option value={3}>Orta</option>
+                  <option value={4}>Zor</option>
+                  <option value={5}>Uzman</option>
                 </select>
               </div>
             </div>
@@ -248,23 +258,23 @@ export default function WorkoutPage() {
           {activeProgram && (
             <div className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-                🎯 Active Program
+                🎯 Aktif Program
               </h2>
               <Card variant="workout" className="p-6 border-l-4 border-l-green-500">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {programs.find(p => p.id === activeProgram.programId)?.name || 'Active Program'}
+                      {programs.find(p => p.id === activeProgram.programId)?.name || 'Aktif Program'}
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                      Started {activeProgram.startDate} • Week {activeProgram.currentWeek}
+                      Başlangıç: {activeProgram.startDate} • Hafta: {activeProgram.currentWeek}
                     </p>
                   </div>
                   <Button
                     variant="primary"
                     onClick={() => startWorkout(activeProgram.programId)}
                   >
-                    Continue Program
+                    Programa Devam Et
                   </Button>
                 </div>
               </Card>
@@ -274,7 +284,7 @@ export default function WorkoutPage() {
           {/* Available Programs */}
           <div className="mb-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              📋 Available Programs
+              📋 Mevcut Programlar
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {programs.map((program) => (
@@ -293,11 +303,11 @@ export default function WorkoutPage() {
                   <div className="flex items-center gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400">
                     <div className="flex items-center gap-1">
                       <span>⏱️</span>
-                      <span>{program.estimatedDuration} min</span>
+                      <span>{program.estimatedDuration} dakika</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <span>📅</span>
-                      <span>{program.daysPerWeek} days/week</span>
+                      <span>{program.daysPerWeek} gün/hafta</span>
                     </div>
                   </div>
                   
@@ -306,7 +316,7 @@ export default function WorkoutPage() {
                     onClick={() => startWorkout(program.id)}
                     className="w-full"
                   >
-                    Start Program
+                    Programı Başlat
                   </Button>
                 </Card>
               ))}
@@ -316,13 +326,13 @@ export default function WorkoutPage() {
           {/* All Exercises */}
           <div>
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-              🏋️ All Exercises ({filteredExercises.length})
+              🏋️ Tüm Egzersizler ({filteredExercises.length})
             </h2>
             
             {filteredExercises.length === 0 ? (
               <Card className="p-8 text-center">
                 <p className="text-gray-600 dark:text-gray-400">
-                  No exercises found matching your criteria.
+                  Kriterlerinize uygun egzersiz bulunamadı.
                 </p>
               </Card>
             ) : (
@@ -331,6 +341,7 @@ export default function WorkoutPage() {
                   <Card
                     key={exercise.id}
                     className="p-4 cursor-pointer hover:shadow-md transition-shadow"
+                    clickable={true}
                     onClick={() => handleExerciseClick(exercise)}
                   >
                     <div className="flex items-center gap-3 mb-3">
@@ -350,18 +361,18 @@ export default function WorkoutPage() {
                     
                     <div className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                       <div className="mb-1">
-                        <span className="font-medium">Muscles:</span> {exercise.muscleGroups.join(', ')}
+                        <span className="font-medium">Kaslar:</span> {exercise.muscleGroups.join(', ')}
                       </div>
                       <div className="mb-1">
-                        <span className="font-medium">Equipment:</span> {exercise.equipmentNeeded.join(', ')}
+                        <span className="font-medium">Ekipman:</span> {exercise.equipmentNeeded.join(', ')}
                       </div>
                       <div>
-                        <span className="font-medium">Duration:</span> {exercise.durationEstimate}s
+                        <span className="font-medium">Süre:</span> {exercise.durationEstimate}s
                       </div>
                     </div>
                     
                     <div className="text-xs text-gray-500 dark:text-gray-400">
-                      Click to view details
+                      Detayları görmek için tıkla
                     </div>
                   </Card>
                 ))}
@@ -384,7 +395,10 @@ export default function WorkoutPage() {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                      {selectedExercise.category} • Level {selectedExercise.difficultyLevel}
+                      {selectedExercise.category === 'strength' ? 'Güç' : 
+                       selectedExercise.category === 'cardio' ? 'Kardiyo' : 
+                       selectedExercise.category === 'flexibility' ? 'Esneklik' : 
+                       selectedExercise.category === 'balance' ? 'Denge' : selectedExercise.category} • Seviye {selectedExercise.difficultyLevel}
                     </div>
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       {selectedExercise.muscleGroups.join(', ')}
@@ -393,7 +407,7 @@ export default function WorkoutPage() {
                 </div>
                 
                 <div>
-                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Instructions</h4>
+                  <h4 className="font-medium text-gray-900 dark:text-white mb-2">Talimatlar</h4>
                   <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                     {selectedExercise.instructions}
                   </p>
@@ -401,7 +415,7 @@ export default function WorkoutPage() {
                 
                 {selectedExercise.tips && (
                   <div>
-                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">Tips</h4>
+                    <h4 className="font-medium text-gray-900 dark:text-white mb-2">İpuçları</h4>
                     <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                       {selectedExercise.tips}
                     </p>
@@ -410,11 +424,11 @@ export default function WorkoutPage() {
                 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="font-medium text-gray-900 dark:text-white">Duration:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">Süre:</span>
                     <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.durationEstimate}s</span>
                   </div>
                   <div>
-                    <span className="font-medium text-gray-900 dark:text-white">Calories/min:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">Kalori/dakika:</span>
                     <span className="text-gray-600 dark:text-gray-300 ml-2">{selectedExercise.caloriesPerMinute}</span>
                   </div>
                 </div>
@@ -424,19 +438,19 @@ export default function WorkoutPage() {
                     variant="primary"
                     onClick={() => {
                       // TODO: Add to workout program
-                      addToast({ type: 'success', message: 'Exercise added to workout!' });
+                      addToast({ type: 'success', message: 'Egzersiz antrenmana eklendi!' });
                       setIsExerciseModalOpen(false);
                     }}
                     className="flex-1"
                   >
-                    Add to Workout
+                    Antrenmana Ekle
                   </Button>
                   <Button
                     variant="secondary"
                     onClick={() => setIsExerciseModalOpen(false)}
                     className="flex-1"
                   >
-                    Close
+                    Kapat
                   </Button>
                 </div>
               </div>
