@@ -93,6 +93,22 @@ export default function WorkoutPage() {
     }
   };
 
+  // Reset programs (clear localStorage and reload)
+  const resetPrograms = () => {
+    try {
+      // Clear workout programs from localStorage
+      localStorage.removeItem('fitbody_workout_programs');
+      
+      // Reload data
+      loadData();
+      
+      addToast({ type: 'success', message: 'Programs reset successfully!' });
+    } catch (error) {
+      console.error('Failed to reset programs:', error);
+      addToast({ type: 'error', message: 'Failed to reset programs' });
+    }
+  };
+
   // Handle exercise selection
   const handleExerciseClick = (exercise: ExerciseType) => {
     setSelectedExercise(exercise);
@@ -214,6 +230,17 @@ export default function WorkoutPage() {
                   <option value={5}>Expert</option>
                 </select>
               </div>
+            </div>
+            
+            {/* Reset Programs Button */}
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <Button
+                variant="outline"
+                onClick={resetPrograms}
+                className="text-sm"
+              >
+                🔄 Programları Sıfırla
+              </Button>
             </div>
           </div>
 

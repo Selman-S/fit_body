@@ -57,12 +57,13 @@ class AuthService {
         progressSharing: false,
       },
       workout: {
-        defaultRestTime: 60,
+        defaultRestTime: 20, // Set arası dinlenme: 20 saniye
+        preparationTime: 5,  // Pozisyon hazırlık: 5 saniye
         autoStartTimer: true,
         soundEffects: true,
         vibration: true,
         timerStyle: 'digital',
-        },
+      },
       };
     }
 

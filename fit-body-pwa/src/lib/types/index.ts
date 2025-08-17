@@ -17,7 +17,8 @@ export interface UserPreferences {
     progressSharing: boolean;
   };
   workout: {
-    defaultRestTime: number;
+    defaultRestTime: number; // Set arası dinlenme süresi (saniye)
+    preparationTime: number; // Pozisyon hazırlık süresi (saniye)
     autoStartTimer: boolean;
     soundEffects: boolean;
     vibration: boolean;

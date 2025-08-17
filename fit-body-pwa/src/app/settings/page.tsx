@@ -76,6 +76,72 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Workout Timer Settings */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-medium text-gray-900 dark:text-white">⏱️ Antrenman Timer Ayarları</h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Set Arası Dinlenme</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Setler arası dinlenme süresi (saniye)</p>
+                </div>
+                <input 
+                  type="number" 
+                  min="10" 
+                  max="300"
+                  defaultValue="20"
+                  className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white w-20 text-center"
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Pozisyon Hazırlık</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Egzersiz öncesi hazırlık süresi (saniye)</p>
+                </div>
+                <input 
+                  type="number" 
+                  min="3" 
+                  max="30"
+                  defaultValue="5"
+                  className="border border-gray-300 dark:border-gray-600 rounded-md px-3 py-2 text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white w-20 text-center"
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Otomatik Timer Başlat</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Egzersiz başladığında timer otomatik başlasın</p>
+                </div>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                  Açık
+                </button>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Ses Efektleri</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Timer ve bildirim sesleri</p>
+                </div>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                  Açık
+                </button>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white">Titreşim</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Timer ve bildirim titreşimleri</p>
+                </div>
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                  Açık
+                </button>
+              </div>
+            </div>
+          </div>
+
           {/* Notifications */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700">
             <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">

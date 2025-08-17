@@ -599,10 +599,38 @@ ol:focus-visible {
   background-color: var(--color-gray-800) !important;
 }
 
-.hover\:bg-gray-100 {
+[data-theme="light"] .hover\:bg-gray-100 {
   &:hover {
       @media (hover: hover) {
           background-color: var(--color-gray-100) !important;
       }
   }
+}
+[data-theme="light"] .bg-gray-50 {
+  background-color: var(--color-gray-50) !important;
+}
+
+[data-theme="light"] .bg-green-50 {
+  background-color: var(--color-green-50);
+}
+
+[data-theme="light"] .text-green-700 {
+  color: var(--color-green-700);
+}
+
+[data-theme="light"] .text-green-900 {
+  color: var(--color-green-900);
+}
+
+
+[data-theme="light"] .bg-gradient-to-br {
+  background: linear-gradient(to bottom right, #eff6ff, #ffffff, #e0e7ff) !important; 
+
+}
+
+[data-theme="light"] .from-blue-50 {
+  background-color: #eff6ff !important;
+}
+[data-theme="light"] .to-indigo-100{
+  background-color: #e0e7ff !important;
 }
