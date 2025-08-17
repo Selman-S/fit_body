@@ -20,6 +20,8 @@ interface AuthStore {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isInitialized: boolean;
+  init: () => void;
   login: (identifier: string) => Promise<boolean>;
   register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
@@ -29,17 +31,39 @@ interface AuthStore {
 
 export const useAuthStore = create<AuthStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isLoading: false,
       isAuthenticated: false,
+      isInitialized: false,
+
+      // Initialize auth state from localStorage
+      init: () => {
+        console.log('🚀 AuthStore init called');
+        try {
+          // Always try to get current user from localStorage
+          const currentUser = authService.getCurrentUser();
+          console.log('🚀 Current user from authService:', currentUser ? currentUser.username : 'null');
+          
+          if (currentUser) {
+            console.log('✅ Setting authenticated state for:', currentUser.username);
+            set({ user: currentUser, isAuthenticated: true, isLoading: false, isInitialized: true });
+          } else {
+            console.log('❌ Setting unauthenticated state');
+            set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true });
+          }
+        } catch (error) {
+          console.error('❌ Failed to initialize auth state:', error);
+          set({ user: null, isAuthenticated: false, isLoading: false, isInitialized: true });
+        }
+      },
 
       login: async (identifier: string) => {
         set({ isLoading: true });
         try {
           const user = authService.login(identifier);
           if (user) {
-            set({ user, isAuthenticated: true, isLoading: false });
+            set({ user, isAuthenticated: true, isLoading: false, isInitialized: true });
             return true;
           }
           return false;
@@ -55,7 +79,7 @@ export const useAuthStore = create<AuthStore>()(
         set({ isLoading: true });
         try {
           const user = authService.register(userData);
-          set({ user, isAuthenticated: true, isLoading: false });
+          set({ user, isAuthenticated: true, isLoading: false, isInitialized: true });
           return true;
         } catch (error) {
           console.error('Registration failed:', error);

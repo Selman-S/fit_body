@@ -2,9 +2,10 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ThemeProvider } from './ThemeProvider';
 import { ToastProvider } from '@/components/ui/Toast';
+import { useAuthStore } from '@/lib/stores/authStore';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -27,6 +28,14 @@ export function Providers({ children }: ProvidersProps) {
         },
       })
   );
+
+  // Initialize AuthStore on mount
+  const initAuth = useAuthStore(state => state.init);
+  
+  useEffect(() => {
+    // Initialize auth state from localStorage
+    initAuth();
+  }, [initAuth]);
 
   return (
     <QueryClientProvider client={queryClient}>

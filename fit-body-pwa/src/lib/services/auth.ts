@@ -140,7 +140,42 @@ class AuthService {
 
   // Get current user
   getCurrentUser(): User | null {
-    return this.currentUser;
+    console.log('🔍 getCurrentUser called');
+    console.log('🔍 Memory currentUser:', this.currentUser);
+    
+    // If we have current user in memory, return it
+    if (this.currentUser) {
+      console.log('✅ Returning user from memory:', this.currentUser.username);
+      return this.currentUser;
+    }
+    
+    // Try to load from localStorage
+    try {
+      console.log('🔍 Checking localStorage...');
+      const currentUserId = storage.get<string>(this.CURRENT_USER_KEY);
+      console.log('🔍 Current User ID from storage:', currentUserId);
+      
+      if (currentUserId) {
+        const users = storage.getCollection<User>(this.STORAGE_KEY);
+        console.log('🔍 All users from storage:', users.length);
+        
+        const user = users.find(u => u.id === currentUserId);
+        console.log('🔍 Found user:', user ? user.username : 'NOT FOUND');
+        
+        if (user) {
+          this.currentUser = user;
+          console.log('✅ User loaded from localStorage:', user.username);
+          return user;
+        }
+      } else {
+        console.log('❌ No current user ID found in storage');
+      }
+    } catch (error) {
+      console.error('❌ Failed to load current user from localStorage:', error);
+    }
+    
+    console.log('❌ No user found, returning null');
+    return null;
   }
   
   // Check if user is authenticated

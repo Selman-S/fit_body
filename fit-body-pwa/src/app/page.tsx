@@ -1,3 +1,6 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -16,11 +19,43 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
+  const router = useRouter();
   return (
     <MainLayout showNavigation={false}>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 theme-transition">
+                      {/* Minimal Header */}
+              <FadeIn direction="down" delay={0}>
+                <header className="flex items-center justify-between px-6 py-4">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <Dumbbell className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-xl font-bold text-gray-900 dark:text-white">Fit Body</span>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => router.push('/login')}
+                      className="flex items-center gap-2"
+                    >
+                      <span>Giriş Yap</span>
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => router.push('/register')}
+                      className="flex items-center gap-2"
+                    >
+                      <span>Kayıt Ol</span>
+                    </Button>
+                    <FloatingThemeToggle />
+                  </div>
+                </header>
+              </FadeIn>
+        
         {/* PWA Update Notification */}
-        <FadeIn direction="down" delay={0}>
+        <FadeIn direction="down" delay={0.5}>
           <PWAUpdateNotification className="mx-4 mt-4" />
         </FadeIn>
         
@@ -41,13 +76,23 @@ export default function Home() {
             
             <FadeIn direction="up" delay={3}>
               <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-                <Button size="lg" variant="primary" className="text-lg px-8 py-4">
-                  <Play className="w-5 h-5 mr-2" />
-                  Şimdi Başla
+                <Button 
+                  size="lg" 
+                  variant="primary" 
+                  className="text-lg px-8 py-4"
+                  onClick={() => router.push('/dashboard')}
+                >
+                  <Play className="w-5 h-5" />
+                  <span>Şimdi Başla</span>
                 </Button>
-                <Button size="lg" variant="secondary" className="text-lg px-8 py-4">
-                  <Dumbbell className="w-5 h-5 mr-2" />
-                  Programları Keşfet
+                <Button 
+                  size="lg" 
+                  variant="secondary" 
+                  className="text-lg px-8 py-4"
+                  onClick={() => router.push('/workout')}
+                >
+                  <Dumbbell className="w-5 h-5" />
+                  <span>Programları Keşfet</span>
                 </Button>
               </div>
             </FadeIn>
@@ -150,8 +195,13 @@ export default function Home() {
               <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
                 Ücretsiz, offline-first ve tamamen özel fitness tracking deneyimi.
               </p>
-              <Button size="lg" variant="secondary" className="text-lg px-8 py-4">
-                <Play className="w-5 h-5 mr-2" />
+              <Button 
+                size="lg" 
+                variant="secondary" 
+                className="text-lg px-8 py-4 "
+                onClick={() => router.push('/dashboard')}
+              >
+                <Play className="w-5 h-5" />
                 Şimdi Başla
               </Button>
             </div>
@@ -161,9 +211,6 @@ export default function Home() {
       
       {/* Floating PWA Install Button */}
       <PWAInstallButton variant="floating" />
-      
-      {/* Floating Theme Toggle */}
-      <FloatingThemeToggle />
     </MainLayout>
   );
 }

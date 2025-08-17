@@ -1,6 +1,7 @@
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { AuthGuard } from '@/components/auth/AuthGuard';
 import { 
   Dumbbell, 
   Calendar,
@@ -12,7 +13,8 @@ import {
 
 export default function DashboardPage() {
   return (
-    <MainLayout>
+    <AuthGuard>
+      <MainLayout showNavigation={true}>
       <div className="space-y-6">
         {/* Page Header */}
         <div className="flex items-center justify-between">
@@ -251,7 +253,8 @@ export default function DashboardPage() {
             </div>
           </Card>
         </div>
-      </div>
-    </MainLayout>
+              </div>
+      </MainLayout>
+    </AuthGuard>
   );
 }
