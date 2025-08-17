@@ -69,7 +69,6 @@ export default function WorkoutSessionPage() {
     return todayExercises[currentExerciseIndex];
   }, [currentExerciseIndex, todayExercises]);
 
-  console.log(todayExercises);
 
   // Get exercise type details
   const getExerciseDetails = useCallback((exerciseId: string): ExerciseType | null => {
@@ -258,21 +257,40 @@ export default function WorkoutSessionPage() {
   // Navigation controls
   const goToPreviousSet = () => {
     if (currentSet > 1) {
-      setCurrentSet(prev => prev - 1);
+      const newSet = currentSet - 1;
+      console.log('Going to previous set:', newSet);
+      setCurrentSet(newSet);
       setWorkoutState('preparing');
       setPreparationTime(user?.preferences?.workout?.preparationTime || 5);
+      
+      // Reset exercise time for the new set
+      if (currentExercise?.durationSeconds) {
+        setExerciseTime(currentExercise.durationSeconds);
+      } else {
+        setExerciseTime((currentExercise?.reps || 10) * 2);
+      }
     }
   };
 
   const goToNextSet = () => {
     if (currentSet < (currentExercise?.sets || 1)) {
-      setCurrentSet(prev => prev + 1);
+      const newSet = currentSet + 1;
+      console.log('Going to next set:', newSet);
+      setCurrentSet(newSet);
       setWorkoutState('preparing');
       setPreparationTime(user?.preferences?.workout?.preparationTime || 5);
+      
+      // Reset exercise time for the new set
+      if (currentExercise?.durationSeconds) {
+        setExerciseTime(currentExercise.durationSeconds);
+      } else {
+        setExerciseTime((currentExercise?.reps || 10) * 2);
+      }
     }
   };
 
   const resetCurrentSet = () => {
+    console.log('Resetting current set:', currentSet);
     setWorkoutState('preparing');
     setPreparationTime(user?.preferences?.workout?.preparationTime || 5);
     if (currentExercise?.durationSeconds) {
@@ -296,6 +314,12 @@ export default function WorkoutSessionPage() {
   // Calculate calories burned
   const calculateCalories = (): number => {
     return Math.round(totalWorkoutTime / 60 * 8); // Rough estimate: 8 cal/min
+  };
+
+  // Calculate progress percentage for circular timer
+  const calculateProgress = (currentTime: number, totalTime: number): number => {
+    if (totalTime <= 0) return 0;
+    return Math.max(0, Math.min(1, currentTime / totalTime));
   };
 
   if (isLoading) {
@@ -412,14 +436,14 @@ export default function WorkoutSessionPage() {
             <ArrowLeft className="w-4 h-4" />
             Çıkış
           </Button>
-          <div className="text-center">
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {exerciseDetails?.name}
-            </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Set {currentSet} / {currentExercise?.sets}
-            </p>
-          </div>
+                     <div className="text-center">
+             <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+               {exerciseDetails?.name}
+             </h1>
+             <p className="text-sm text-gray-600 dark:text-gray-400">
+               Set {currentSet} / {currentExercise?.sets || 1}
+             </p>
+           </div>
           <Button
             variant={isPaused ? "primary" : "secondary"}
             onClick={togglePause}
@@ -451,41 +475,150 @@ export default function WorkoutSessionPage() {
             </div>
           </Card>
 
-          {/* Timer Display */}
-          <Card className="p-6 text-center">
-            {workoutState === 'preparing' && (
-              <div>
-                <h3 className="text-lg font-medium text-orange-600 mb-2">Pozisyon Hazırlığı</h3>
-                <div className="text-4xl font-bold text-orange-600 mb-2">
-                  {preparationTime}
-                </div>
-                <p className="text-sm text-gray-600">Pozisyonunu al ve hazırlan</p>
-              </div>
-            )}
-            
-            {workoutState === 'exercising' && (
-              <div>
-                <h3 className="text-lg font-medium text-green-600 mb-2">Egzersiz</h3>
-                <div className="text-4xl font-bold text-green-600 mb-2">
-                  {formatTime(exerciseTime)}
-                </div>
-                <p className="text-sm text-gray-600">
-                  {currentExercise?.reps ? `${currentExercise.reps} tekrar` : 'Süre bazlı'}
-                </p>
-              </div>
-            )}
-            
-            {workoutState === 'resting' && (
-              <div>
-                <h3 className="text-lg font-medium text-blue-600 mb-2">Dinlenme</h3>
-                <div className="text-4xl font-bold text-blue-600 mb-2">
-                  {formatTime(restTime)}
-                </div>
-                <p className="text-sm text-gray-600">Sonraki sete hazırlan</p>
-              </div>
-            )}
-          </Card>
-
+                     {/* Timer Display - Circular Progress */}
+           <Card className="p-6 text-center">
+             {workoutState === 'preparing' && (
+               <div className="relative">
+                 <h3 className="text-lg font-medium text-orange-600 mb-4">Pozisyon Hazırlığı</h3>
+                 
+                 {/* Circular Progress Container */}
+                 <div className="relative w-32 h-32 mx-auto mb-4">
+                   {/* Background Circle */}
+                   <div className="absolute inset-0 w-full h-full rounded-full border-8 border-gray-200 dark:border-gray-700"></div>
+                   
+                   {/* Progress Circle */}
+                   <div 
+                     className="absolute inset-0 w-full h-full rounded-full border-8 border-orange-500 transition-all duration-1000 ease-out"
+                     style={{
+                       background: `conic-gradient(from 0deg, transparent 0deg, transparent ${360 - calculateProgress(preparationTime, user?.preferences?.workout?.preparationTime || 5) * 360}deg, #f97316 ${360 - calculateProgress(preparationTime, user?.preferences?.workout?.preparationTime || 5) * 360}deg, #f97316 360deg)`
+                     }}
+                   ></div>
+                   
+                   {/* Timer Text */}
+                   <div className="absolute inset-0 flex items-center justify-center">
+                     <div className="text-center">
+                       <div className="text-3xl font-bold text-orange-600">
+                         {preparationTime}
+                       </div>
+                       <div className="text-xs text-gray-500">saniye</div>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <p className="text-sm text-gray-600">Pozisyonunu al ve hazırlan</p>
+               </div>
+             )}
+             
+             {workoutState === 'exercising' && (
+               <div className="relative">
+                 <h3 className="text-lg font-medium text-green-600 mb-4">Egzersiz</h3>
+                 
+                 {/* Circular Progress Container */}
+                 <div className="relative w-32 h-32 mx-auto mb-4">
+                   {/* Background Circle */}
+                   <div className="absolute inset-0 w-full h-full rounded-full border-8 border-gray-200 dark:border-gray-700"></div>
+                   
+                   {/* Progress Circle */}
+                   <div 
+                     className="absolute inset-0 w-full h-full rounded-full border-8 border-green-500 transition-all duration-1000 ease-out"
+                     style={{
+                       background: `conic-gradient(from 0deg, transparent 0deg, transparent ${360 - calculateProgress(exerciseTime, currentExercise?.durationSeconds || (currentExercise?.reps || 10) * 2) * 360}deg, #22c55e ${360 - calculateProgress(exerciseTime, currentExercise?.durationSeconds || (currentExercise?.reps || 10) * 2) * 360}deg, #22c55e 360deg)`
+                     }}
+                   ></div>
+                   
+                   {/* Timer Text */}
+                   <div className="absolute inset-0 flex items-center justify-center">
+                     <div className="text-center">
+                       <div className="text-3xl font-bold text-green-600">
+                         {formatTime(exerciseTime)}
+                       </div>
+                       <div className="text-xs text-gray-500">
+                         {currentExercise?.reps ? `${currentExercise.reps} tekrar` : 'Süre bazlı'}
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <p className="text-sm text-gray-600">Egzersizi tamamla</p>
+               </div>
+             )}
+             
+             {workoutState === 'resting' && (
+               <div className="relative">
+                 <h3 className="text-lg font-medium text-blue-600 mb-4">Dinlenme</h3>
+                 
+                 {/* Circular Progress Container */}
+                 <div className="relative w-32 h-32 mx-auto mb-4">
+                   {/* Background Circle */}
+                   <div className="absolute inset-0 w-full h-full rounded-full border-8 border-gray-200 dark:border-gray-700"></div>
+                   
+                   {/* Progress Circle */}
+                   <div 
+                     className="absolute inset-0 w-full h-full rounded-full border-8 border-blue-500 transition-all duration-1000 ease-out"
+                     style={{
+                       background: `conic-gradient(from 0deg, transparent 0deg, transparent ${360 - calculateProgress(restTime, currentExercise?.restSeconds || user?.preferences?.workout?.defaultRestTime || 20) * 360}deg, #3b82f6 ${360 - calculateProgress(restTime, currentExercise?.restSeconds || user?.preferences?.workout?.defaultRestTime || 20) * 360}deg, #3b82f6 360deg)`
+                     }}
+                   ></div>
+                   
+                   {/* Timer Text */}
+                   <div className="absolute inset-0 flex items-center justify-center">
+                     <div className="text-center">
+                       <div className="text-3xl font-bold text-blue-600">
+                         {formatTime(restTime)}
+                       </div>
+                       <div className="text-xs text-gray-500">saniye</div>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <p className="text-sm text-gray-600">Sonraki sete hazırlan</p>
+               </div>
+             )}
+           </Card>
+                {/* Navigation Controls */}
+                <Card className="p-4">
+             <div className="text-center mb-4">
+               <div className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                 Set {currentSet} / {currentExercise?.sets || 1}
+               </div>
+               <div className="text-sm text-gray-600 dark:text-gray-400">
+                 {workoutState === 'preparing' && 'Pozisyon hazırlığı'}
+                 {workoutState === 'exercising' && 'Egzersiz yapılıyor'}
+                 {workoutState === 'resting' && 'Dinlenme'}
+               </div>
+             </div>
+             
+             <div className="flex justify-center gap-3">
+               <Button
+                 variant="secondary"
+                 onClick={goToPreviousSet}
+                 disabled={currentSet <= 1}
+                 className="flex items-center gap-2"
+               >
+                 <SkipBack className="w-4 h-4" />
+                 Önceki Set
+               </Button>
+               
+               <Button
+                 variant="secondary"
+                 onClick={resetCurrentSet}
+                 className="flex items-center gap-2"
+               >
+                 <RotateCcw className="w-4 h-4" />
+                 Reset
+               </Button>
+               
+               <Button
+                 variant="secondary"
+                 onClick={goToNextSet}
+                 disabled={currentSet >= (currentExercise?.sets || 1)}
+                 className="flex items-center gap-2"
+               >
+                 <SkipForward className="w-4 h-4" />
+                 Sonraki Set
+               </Button>
+             </div>
+           </Card>
           {/* Progress Bar */}
           <Card className="p-4">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
@@ -500,39 +633,7 @@ export default function WorkoutSessionPage() {
             </div>
           </Card>
 
-          {/* Navigation Controls */}
-          <Card className="p-4">
-            <div className="flex justify-center gap-3">
-              <Button
-                variant="secondary"
-                onClick={goToPreviousSet}
-                disabled={currentSet <= 1}
-                className="flex items-center gap-2"
-              >
-                <SkipBack className="w-4 h-4" />
-                Önceki Set
-              </Button>
-              
-              <Button
-                variant="secondary"
-                onClick={resetCurrentSet}
-                className="flex items-center gap-2"
-              >
-                <RotateCcw className="w-4 h-4" />
-                Reset
-              </Button>
-              
-              <Button
-                variant="secondary"
-                onClick={goToNextSet}
-                disabled={currentSet >= (currentExercise?.sets || 1)}
-                className="flex items-center gap-2"
-              >
-                <SkipForward className="w-4 h-4" />
-                Sonraki Set
-              </Button>
-            </div>
-          </Card>
+     
 
           {/* Stats */}
           <Card className="p-4">
