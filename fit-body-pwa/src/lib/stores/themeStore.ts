@@ -15,7 +15,7 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set, get) => ({
-      theme: 'system',
+      theme: 'light', // Default to light mode for new users
       isDark: false,
 
       setTheme: (theme: Theme) => {
@@ -35,8 +35,15 @@ export const useThemeStore = create<ThemeState>()(
       },
 
       applyTheme: (theme: Theme) => {
-        const isDark = theme === 'dark' || 
-          (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        let isDark: boolean;
+        
+        if (theme === 'system') {
+          // Only use system preference if user explicitly chose 'system'
+          isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        } else {
+          // Use explicit user choice (light or dark)
+          isDark = theme === 'dark';
+        }
         
         set({ isDark });
         
@@ -58,10 +65,11 @@ export const useThemeStore = create<ThemeState>()(
   )
 );
 
-// System preference change listener
+// System preference change listener - Only for users who explicitly chose 'system'
 if (typeof window !== 'undefined') {
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     const { theme } = useThemeStore.getState();
+    // Only auto-update if user explicitly chose 'system' theme
     if (theme === 'system') {
       useThemeStore.getState().applyTheme('system');
     }

@@ -127,8 +127,9 @@ export const accessibilityUtils = {
     return window.matchMedia('(prefers-contrast: high)').matches;
   },
 
-  // Check if user prefers dark color scheme
+  // Check if user prefers dark color scheme (only for system theme users)
   prefersDarkColorScheme: (): boolean => {
+    // Only check system preference if user hasn't made an explicit choice
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   },
 

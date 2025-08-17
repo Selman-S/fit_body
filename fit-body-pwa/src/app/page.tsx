@@ -189,10 +189,10 @@ export default function Home() {
         <FadeIn direction="up" delay={8}>
           <div className="text-center py-16 px-4 bg-blue-600 dark:bg-blue-700">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold  dark:text-white mb-6">
                 Fitness Yolculuğunuza Başlayın
               </h2>
-              <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+              <p className="text-xl dark:text-blue-100 mb-8 max-w-2xl mx-auto">
                 Ücretsiz, offline-first ve tamamen özel fitness tracking deneyimi.
               </p>
               <Button 

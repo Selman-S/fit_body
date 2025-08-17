@@ -203,8 +203,13 @@ export const ColorContrast: React.FC<ColorContrastProps> = ({
     setCurrentTheme(theme);
   };
 
-  // Detect system theme preference
+  // Detect system theme preference (only for system theme users)
   useEffect(() => {
+    // Only listen to system preference changes if user explicitly chose 'system'
+    if (currentTheme !== 'system') {
+      return;
+    }
+    
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e: MediaQueryListEvent) => {
       if (currentTheme === 'system') {
@@ -215,9 +220,7 @@ export const ColorContrast: React.FC<ColorContrastProps> = ({
     mediaQuery.addEventListener('change', handleChange);
     
     // Set initial theme
-    if (currentTheme === 'system') {
-      applyThemeColors(mediaQuery.matches ? 'dark' : 'light');
-    }
+    applyThemeColors(mediaQuery.matches ? 'dark' : 'light');
 
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [currentTheme]);

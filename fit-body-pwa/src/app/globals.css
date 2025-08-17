@@ -355,6 +355,21 @@ textarea:focus-visible,
   /* Borders */
   .border-gray-200 { border-color: #e5e7eb !important; }
   .border-gray-300 { border-color: #d1d5db !important; }
+  
+  /* Force light mode for all elements */
+  * {
+    color-scheme: light !important;
+  }
+  
+  /* Override any Tailwind dark mode classes */
+  .dark\:bg-gray-800 { background-color: #ffffff !important; }
+  .dark\:bg-gray-700 { background-color: #f3f4f6 !important; }
+  .dark\:bg-gray-600 { background-color: #e5e7eb !important; }
+  .dark\:text-white { color: #111827 !important; }
+  .dark\:text-gray-300 { color: #374151 !important; }
+  .dark\:text-gray-400 { color: #4b5563 !important; }
+  .dark\:border-gray-700 { border-color: #e5e7eb !important; }
+  .dark\:border-gray-600 { border-color: #d1d5db !important; }
 }
 
 /* Dark Mode Specific Adjustments */
@@ -516,4 +531,78 @@ ol:focus-visible {
 }
 [data-theme="light"] .sidebar-navigation-item:hover {
   background-color: var(--primary-100) !important;
+}
+
+/* Force light mode overrides for all components */
+[data-theme="light"] .bg-slate-800,
+[data-theme="light"] .bg-slate-700,
+[data-theme="light"] .bg-slate-600 {
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .text-slate-50,
+[data-theme="light"] .text-slate-100,
+[data-theme="light"] .text-slate-200 {
+  color: #111827 !important;
+}
+
+[data-theme="light"] .border-slate-700,
+[data-theme="light"] .border-slate-600 {
+  border-color: #e5e7eb !important;
+}
+[data-theme="light"] .bg-white\/80 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+[data-theme="light"] .bg-white\/60 {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+[data-theme="light"] .bg-blue-50 {
+  background-color: #eff6ff !important;
+}
+
+[data-theme="light"] .bg-white {
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .bg-gray-100:hover {
+  background-color: var(--color-gray-100) !important;
+
+}
+
+[data-theme="light"] .bg-gray-200:hover {
+  background-color: var(--color-gray-200) !important;
+}
+
+[data-theme="light"] .bg-gray-300:hover {
+  background-color: var(--color-gray-300) !important;
+}
+
+[data-theme="light"] .bg-gray-400:hover {
+  background-color: var(--color-gray-400) !important;
+}
+
+[data-theme="light"] .bg-gray-500:hover {
+  background-color: var(--color-gray-500) !important;
+}
+
+[data-theme="light"] .bg-gray-600:hover {
+  background-color: var(--color-gray-600) !important;
+}
+
+[data-theme="light"] .bg-gray-700:hover {
+  background-color: var(--color-gray-700) !important;
+}
+
+[data-theme="light"] .bg-gray-800:hover {
+  background-color: var(--color-gray-800) !important;
+}
+
+.hover\:bg-gray-100 {
+  &:hover {
+      @media (hover: hover) {
+          background-color: var(--color-gray-100) !important;
+      }
+  }
 }
