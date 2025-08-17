@@ -77,8 +77,8 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
         </div>
 
         {/* User Profile Card */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <Card className="p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+        <div className="p-4 border-b border-gray-200  dark:border-gray-700">
+          <Card className="p-4 bg-gradient-to-br sidebar-profile-name from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-lg">
@@ -108,7 +108,7 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
                 key={item.href}
                 onClick={() => handleNavigation(item.href)}
                                  className={cn(
-                   'w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-left',
+                   'w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 text-left sidebar-navigation-item',
                    isActive
                      ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700'
                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'

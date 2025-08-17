@@ -489,3 +489,31 @@ ol:focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring-color);
   outline-offset: var(--focus-ring-offset);
 }
+
+[data-theme="light"] .performance-tips {
+  background-color: var(--primary-50) !important;
+}
+[data-theme="light"] .performance-tips  h4,
+[data-theme="light"] .performance-tips  ul li {
+  color: var(--primary-900) !important;
+}
+[data-theme="light"] .performance-tips  ul li {
+  color: var(--primary-900) !important;
+}
+[data-theme="light"] .sidebar-profile-name {
+  background-color: var(--primary-50) !important;
+  color: var(--primary-900) !important;
+}
+[data-theme="light"] .sidebar-profile-name span {
+  color: var(--primary-900) !important;
+}
+[data-theme="light"] .sidebar-profile-name p {
+  color: var(--primary-900) !important;
+}
+[data-theme="light"] .sidebar-navigation-item {
+  color: var(--primary-900) !important;
+
+}
+[data-theme="light"] .sidebar-navigation-item:hover {
+  background-color: var(--primary-100) !important;
+}

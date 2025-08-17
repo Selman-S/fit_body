@@ -191,7 +191,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       )}
 
       {/* Performance Tips */}
-      <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+      <div className="mt-6 p-4 performance-tips bg-blue-50 dark:bg-blue-900/20 rounded-lg">
         <h4 className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">
           Performance Tips
         </h4>
