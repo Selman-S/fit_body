@@ -15,6 +15,11 @@ export function MainLayout({ children, showNavigation = true }: MainLayoutProps)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const { isAuthenticated } = useAuthStore();
+  
+  // Debug state - sadece state değiştiğinde
+  useEffect(() => {
+    console.log('MainLayout state changed:', { isSidebarOpen, isMobile, isAuthenticated });
+  }, [isSidebarOpen, isMobile, isAuthenticated]);
 
   // Responsive breakpoint detection
   useEffect(() => {
@@ -47,50 +52,57 @@ export function MainLayout({ children, showNavigation = true }: MainLayoutProps)
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header - Always visible */}
       <Header 
-        onMenuClick={() => setIsSidebarOpen(true)}
+        onMenuClick={() => {
+          console.log('Hamburger clicked! Setting sidebar to open');
+          setIsSidebarOpen(true);
+        }}
         isMobile={isMobile}
       />
 
       {/* Desktop Layout */}
-      <div className="hidden lg:flex">
-        {/* Sidebar - Desktop only */}
-        <Sidebar 
-          isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-          isMobile={false}
-        />
-        
-        {/* Main Content */}
-        <main className="flex-1 p-6">
-          {children}
-        </main>
-      </div>
+      {!isMobile && (
+        <div className="hidden lg:flex">
+          {/* Sidebar - Desktop only */}
+          <Sidebar 
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={false}
+          />
+          
+          {/* Main Content */}
+          <main className="flex-1 p-6">
+            {children}
+          </main>
+        </div>
+      )}
 
       {/* Mobile Layout */}
-      <div className="lg:hidden">
-        {/* Sidebar Overlay - Mobile only */}
-        {isSidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-            onClick={() => setIsSidebarOpen(false)}
+      {isMobile && (
+        <div className="lg:hidden">
+          {/* Sidebar Overlay - Mobile only */}
+          {isSidebarOpen && (
+            <div 
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+          )}
+          
+          {/* Sidebar - Mobile only */}
+          <Sidebar 
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            isMobile={true}
           />
-        )}
-        
-        {/* Sidebar - Mobile only */}
-        <Sidebar 
-          isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-          isMobile={true}
-        />
-        
-        {/* Main Content - Mobile */}
-        <main className="pb-20 px-4 py-6">
-          {children}
-        </main>
-        
-        {/* Bottom Navigation - Mobile only */}
-        <BottomNavigation />
-      </div>
+          
+          {/* Main Content - Mobile */}
+          <main className="pb-20 px-4 py-6">
+            {children}
+          </main>
+          
+          {/* Bottom Navigation - Mobile only */}
+          <BottomNavigation />
+        </div>
+      )}
     </div>
   );
 }

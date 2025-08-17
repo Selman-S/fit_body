@@ -17,7 +17,7 @@ export default function DashboardPage() {
       <MainLayout showNavigation={true}>
       <div className="space-y-6">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               Ana Sayfa
@@ -26,10 +26,19 @@ export default function DashboardPage() {
               Bugünkü antrenmanınızı planlayın ve ilerlemenizi takip edin
             </p>
           </div>
-          <Button variant="primary" size="lg">
-            <Play className="w-4 h-4 mr-2" />
-            Antrenman Başlat
-          </Button>
+          {/* Mobilde buton alt kısımda, desktop'ta sağda */}
+          <div className="lg:hidden">
+            <Button variant="primary" className="w-full">
+              <Play className="w-4 h-4 mr-2" />
+              Antrenman Başlat
+            </Button>
+          </div>
+          <div className="hidden lg:block">
+            <Button variant="primary" size="lg">
+              <Play className="w-4 h-4 mr-2" />
+              Antrenman Başlat
+            </Button>
+          </div>
         </div>
 
         {/* Quick Stats Grid */}

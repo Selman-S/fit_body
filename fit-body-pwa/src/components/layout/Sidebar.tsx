@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Home, 
   Dumbbell, 
@@ -36,6 +36,11 @@ const navigationItems = [
 export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
   const { user } = useAuthStore();
   const [activeItem, setActiveItem] = useState('/dashboard');
+  
+  // Debug props - sadece props değiştiğinde
+  useEffect(() => {
+    console.log('Sidebar props changed:', { isOpen, isMobile });
+  }, [isOpen, isMobile]);
 
   const handleNavigation = (href: string) => {
     setActiveItem(href);
@@ -50,31 +55,38 @@ export function Sidebar({ isOpen, onClose, isMobile }: SidebarProps) {
     isMobile
       ? 'fixed top-0 left-0 h-full w-64 z-50 transform transition-transform duration-300 ease-in-out'
       : 'w-64 h-screen',
-    isMobile && (isOpen ? 'translate-x-0' : '-translate-x-full')
+    // Mobilde transform logic'i her zaman çalışsın
+    isMobile ? (isOpen ? 'translate-x-0' : '-translate-x-full') : ''
   );
 
   return (
     <>
       <aside className={sidebarClasses}>
-        {/* Header */}
-        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">FB</span>
-            </div>
-            <span className="font-semibold text-lg text-gray-900 dark:text-white theme-text">
-              Fit Body
-            </span>
-          </div>
-          {isMobile && (
-            <button
-              onClick={onClose}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          )}
-        </div>
+                 {/* Header */}
+                   {/* Sadece mobilde close butonu */}
+           {isMobile && (
+         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200 dark:border-gray-700">
+           {/* Sadece mobilde logo göster */}
+         
+             <div className="flex items-center gap-2">
+               <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                 <span className="text-white font-bold text-sm">FB</span>
+               </div>
+               <span className="font-semibold text-lg text-gray-900 dark:text-white theme-text">
+                 Fit Body
+               </span>
+             </div>
+     
+           
+         
+             <button
+               onClick={onClose}
+               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+             >
+               <X className="w-5 h-5" />
+             </button>
+         </div>
+           )}
 
         {/* User Profile Card */}
         <div className="p-4 border-b border-gray-200  dark:border-gray-700">

@@ -14,29 +14,23 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
   const { user, isAuthenticated, isLoading, isInitialized } = useAuthStore();
   const [isChecking, setIsChecking] = useState(true);
 
-  console.log('🛡️ AuthGuard render:', { user: user?.username, isAuthenticated, isLoading, isInitialized, isChecking });
 
   useEffect(() => {
-    console.log('🛡️ AuthGuard useEffect triggered:', { isAuthenticated, user: user?.username, isLoading, isInitialized });
     
     // Wait for auth to be initialized before checking
     if (!isInitialized) {
-      console.log('🛡️ Auth not initialized yet, waiting...');
       return;
     }
     
     // Check authentication status
     if (!isLoading) {
       if (!isAuthenticated || !user) {
-        console.log('🛡️ Redirecting to login - not authenticated');
         // Redirect to login if not authenticated
         router.push('/login');
       } else {
-        console.log('🛡️ User authenticated, setting isChecking to false');
         setIsChecking(false);
       }
     } else {
-      console.log('🛡️ Still loading...');
     }
   }, [isAuthenticated, user, isLoading, isInitialized, router]);
 

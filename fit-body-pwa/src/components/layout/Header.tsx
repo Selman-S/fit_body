@@ -31,27 +31,30 @@ export function Header({ onMenuClick, isMobile }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm theme-transition">
       <div className="flex items-center justify-between h-16 px-4 lg:px-6">
-        {/* Left Section - Menu Button & Logo */}
-        <div className="flex items-center gap-3">
-          {isMobile && (
-            <button
-              onClick={onMenuClick}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              aria-label="Open menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          )}
-          
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">FB</span>
-            </div>
-            <span className="font-semibold text-lg text-gray-900 dark:text-white theme-text">
-              Fit Body
-            </span>
-          </div>
-        </div>
+                 {/* Left Section - Menu Button & Logo */}
+         <div className="flex items-center gap-3">
+           {isMobile && (
+             <button
+               onClick={onMenuClick}
+               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+               aria-label="Open menu"
+             >
+               <Menu className="w-5 h-5" />
+             </button>
+           )}
+           
+           {/* Desktop'ta logo, mobilde yok */}
+           {!isMobile && (
+             <div className="flex items-center gap-2">
+               <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                 <span className="text-white font-bold text-sm">FB</span>
+               </div>
+               <span className="font-semibold text-lg text-gray-900 dark:text-white theme-text">
+                 Fit Body
+               </span>
+             </div>
+           )}
+         </div>
 
         {/* Right Section - User Actions */}
         <div className="flex items-center gap-2">
