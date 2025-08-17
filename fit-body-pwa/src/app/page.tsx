@@ -1,6 +1,7 @@
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { PWAInstallButton, PWAUpdateNotification } from '@/components/ui/PWAInstallButton';
 import { 
   Dumbbell, 
   TrendingUp, 
@@ -15,6 +16,9 @@ export default function Home() {
   return (
     <MainLayout showNavigation={false}>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        {/* PWA Update Notification */}
+        <PWAUpdateNotification className="mx-4 mt-4" />
+        
         {/* Hero Section */}
         <div className="text-center py-16 px-4">
           <div className="max-w-4xl mx-auto">
@@ -31,7 +35,7 @@ export default function Home() {
               Günlük egzersiz takibi, ilerleme analizi ve motivasyon sistemi.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
               <Button size="lg" variant="primary" className="text-lg px-8 py-4">
                 <Play className="w-5 h-5 mr-2" />
                 Hemen Başla
@@ -40,6 +44,9 @@ export default function Home() {
                 Daha Fazla Bilgi
               </Button>
             </div>
+            
+            {/* PWA Install Button */}
+            <PWAInstallButton  variant="banner" />
           </div>
         </div>
 
@@ -131,20 +138,24 @@ export default function Home() {
         </div>
 
         {/* CTA Section */}
-        <div className="bg-blue-600 dark:bg-blue-700 py-16">
-          <div className="max-w-4xl mx-auto text-center px-4">
+        <div className="text-center py-16 px-4 bg-blue-600 dark:bg-blue-700">
+          <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Fitness Yolculuğunuza Başlayın
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              localStorage-powered PWA ile offline çalışan, hızlı ve güvenli fitness tracking deneyimi.
+              Ücretsiz, offline-first ve tamamen özel fitness tracking deneyimi.
             </p>
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-4 bg-white text-blue-600 hover:bg-gray-100">
-              Ücretsiz Başla
+            <Button size="lg" variant="secondary" className="text-lg px-8 py-4">
+              <Play className="w-5 h-5 mr-2" />
+              Şimdi Başla
             </Button>
           </div>
         </div>
       </div>
+      
+      {/* Floating PWA Install Button */}
+      <PWAInstallButton variant="floating" />
     </MainLayout>
   );
 }

@@ -61,7 +61,7 @@ export function MainLayout({ children, showNavigation = true }: MainLayoutProps)
         />
         
         {/* Main Content */}
-        <main className="flex-1 ml-64 p-6">
+        <main className="flex-1 p-6">
           {children}
         </main>
       </div>
