@@ -62,45 +62,14 @@ export class ExerciseService {
     const existingPrograms = storage.getCollection<WorkoutProgram>('fitbody_workout_programs');
     if (existingPrograms.length > 0) return; // Already loaded
 
-    // Get loaded exercises
-    const exercises = this.getAllExerciseTypes();
-    const findExercise = (name: string) => exercises.find(ex => ex.name === name);
-
-    const beginnerProgram: Omit<WorkoutProgram, 'id' | 'createdAt' | 'updatedAt'> = {
-      name: 'Başlangıç Programı',
-      description: 'Fitness yolculuğuna başlayanlar için ideal 4 günlük program',
-      programType: 'mixed',
-      difficultyLevel: 1,
-      estimatedDuration: 30,
-      daysPerWeek: 4,
-      totalWeeks: 4,
-      isDefault: true,
-      exercises: [
-        // Pazartesi - Alt Vücut (Day 1)
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Air Squat')?.id || '', dayOfProgram: 1, exerciseOrder: 1, sets: 3, reps: 12, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Side Lunge')?.id || '', dayOfProgram: 1, exerciseOrder: 2, sets: 3, reps: 12, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Glute Kickback')?.id || '', dayOfProgram: 1, exerciseOrder: 3, sets: 3, reps: 15, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Side Plank')?.id || '', dayOfProgram: 1, exerciseOrder: 4, sets: 3, durationSeconds: 30, restSeconds: 20 },
-        
-        // Çarşamba - Üst Vücut (Day 3)
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Incline Push-Up')?.id || '', dayOfProgram: 3, exerciseOrder: 1, sets: 3, reps: 12, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Side Plank')?.id || '', dayOfProgram: 3, exerciseOrder: 2, sets: 3, durationSeconds: 30, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Bicycle Crunch')?.id || '', dayOfProgram: 3, exerciseOrder: 3, sets: 3, reps: 20, restSeconds: 20 },
-        
-        // Cuma - Full Body (Day 5)
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Burpee to Tuck Jump')?.id || '', dayOfProgram: 5, exerciseOrder: 1, sets: 3, reps: 8, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Air Squat')?.id || '', dayOfProgram: 5, exerciseOrder: 2, sets: 3, reps: 15, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Mountain Climber Twist')?.id || '', dayOfProgram: 5, exerciseOrder: 3, sets: 3, durationSeconds: 30, restSeconds: 20 },
-
-        // Pazar - Core & Flexibility (Day 0)
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Side Plank')?.id || '', dayOfProgram: 0, exerciseOrder: 1, sets: 3, durationSeconds: 30, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Bicycle Crunch')?.id || '', dayOfProgram: 0, exerciseOrder: 2, sets: 3, reps: 20, restSeconds: 20 },
-        { id: crypto.randomUUID(), exerciseTypeId: findExercise('Glute Kickback')?.id || '', dayOfProgram: 0, exerciseOrder: 3, sets: 3, reps: 15, restSeconds: 20 },
-      ],
-    };
-
-    storage.addToCollection<WorkoutProgram>('fitbody_workout_programs', beginnerProgram);
-    console.log('✅ Başlangıç programı yüklendi!');
+    // Import workout service to load programs
+    import('./workout').then(({ WorkoutService }) => {
+      const workoutService = new WorkoutService();
+      workoutService.loadDefaultPrograms();
+      console.log('✅ Default workout programs loaded via workout service!');
+    }).catch(error => {
+      console.error('Failed to load default programs:', error);
+    });
   }
 
   // Get all workout programs

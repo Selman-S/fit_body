@@ -76,8 +76,8 @@ export default function WorkoutPage() {
       // Load default exercises if none exist
       exerciseService.loadDefaultExercises();
       
-      // Force reload programs to get updated structure
-      exerciseService.loadDefaultPrograms();
+      // Load default workout programs via workout service
+      workoutService.loadDefaultPrograms();
       
       // Get all exercises and programs
       const allExercises = exerciseService.getAllExerciseTypes();
@@ -90,6 +90,8 @@ export default function WorkoutPage() {
       setExercises(allExercises);
       setPrograms(allPrograms);
       setFilteredExercises(allExercises);
+      
+      console.log(`✅ Loaded ${allExercises.length} exercises and ${allPrograms.length} programs`);
       
     } catch (error) {
       console.error('Failed to load workout data:', error);
@@ -308,6 +310,39 @@ export default function WorkoutPage() {
                     <div className="flex items-center gap-1">
                       <span>📅</span>
                       <span>{program.daysPerWeek} gün/hafta</span>
+                    </div>
+                  </div>
+
+                  {/* Program Stats */}
+                  <div className="grid grid-cols-2 gap-3 mb-4 text-xs">
+                    <div className="bg-gray-100 dark:bg-gray-700 rounded p-2 text-center">
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {program.exercises.length}
+                      </div>
+                      <div className="text-gray-600 dark:text-gray-400">Egzersiz</div>
+                    </div>
+                    <div className="bg-gray-100 dark:bg-gray-700 rounded p-2 text-center">
+                      <div className="font-medium text-gray-900 dark:text-white">
+                        {program.totalWeeks || 4}
+                      </div>
+                      <div className="text-gray-600 dark:text-gray-400">Hafta</div>
+                    </div>
+                  </div>
+
+                  {/* Difficulty Level */}
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-xs text-gray-500">Zorluk:</span>
+                    <div className="flex gap-1">
+                      {Array.from({ length: 5 }).map((_, index) => (
+                        <div
+                          key={index}
+                          className={`w-2 h-2 rounded-full ${
+                            index < program.difficultyLevel 
+                              ? 'bg-blue-500' 
+                              : 'bg-gray-300 dark:bg-gray-600'
+                          }`}
+                        />
+                      ))}
                     </div>
                   </div>
                   

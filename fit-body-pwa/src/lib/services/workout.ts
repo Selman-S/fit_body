@@ -99,6 +99,46 @@ export class WorkoutService {
     return this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
   }
 
+  // Load default workout programs
+  loadDefaultPrograms(): void {
+    const existingPrograms = this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
+    if (existingPrograms.length > 0) return; // Already loaded
+
+    // Import programs from constants
+    import('@/lib/constants/workout-programs').then(({ WORKOUT_PROGRAMS }) => {
+      WORKOUT_PROGRAMS.forEach(program => {
+        this.storage.addToCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS, program);
+      });
+      console.log('Default workout programs loaded successfully');
+    }).catch(error => {
+      console.error('Failed to load default programs:', error);
+    });
+  }
+
+  // Get program by ID
+  getProgramById(programId: string): WorkoutProgram | null {
+    const programs = this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
+    return programs.find(p => p.id === programId) || null;
+  }
+
+  // Get programs by type
+  getProgramsByType(programType: string): WorkoutProgram[] {
+    const programs = this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
+    return programs.filter(p => p.programType === programType);
+  }
+
+  // Get programs by difficulty
+  getProgramsByDifficulty(difficulty: number): WorkoutProgram[] {
+    const programs = this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
+    return programs.filter(p => p.difficultyLevel === difficulty);
+  }
+
+  // Get programs by duration range
+  getProgramsByDuration(minDuration: number, maxDuration: number): WorkoutProgram[] {
+    const programs = this.storage.getCollection<WorkoutProgram>(STORAGE_KEYS.WORKOUT_PROGRAMS);
+    return programs.filter(p => p.estimatedDuration >= minDuration && p.estimatedDuration <= maxDuration);
+  }
+
   // Get workout stats
   getWorkoutStats(userId: string, period: 'week' | 'month' | 'year' = 'month') {
     const sessions = this.storage.getCollection<WorkoutSession>(STORAGE_KEYS.WORKOUT_SESSIONS)
