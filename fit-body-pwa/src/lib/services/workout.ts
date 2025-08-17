@@ -2,6 +2,7 @@
 // localStorage-based workout session management
 
 import { storage } from './storage';
+import { progressService } from './progress';
 import { 
   WorkoutSession, 
   ExerciseLog, 
@@ -52,7 +53,7 @@ export class WorkoutService {
 
   // Complete workout session
   completeWorkoutSession(sessionId: string, updates: Partial<WorkoutSession>): WorkoutSession | null {
-    return this.storage.updateInCollection<WorkoutSession>(
+    const completedSession = this.storage.updateInCollection<WorkoutSession>(
       STORAGE_KEYS.WORKOUT_SESSIONS,
       sessionId,
       {
@@ -61,6 +62,17 @@ export class WorkoutService {
         endTime: new Date().toISOString(),
       }
     );
+
+    // Check for achievements when workout is completed
+    if (completedSession) {
+      try {
+        progressService.checkAndAwardAchievements(completedSession.userId);
+      } catch (error) {
+        console.error('Failed to check achievements:', error);
+      }
+    }
+
+    return completedSession;
   }
 
   // Log exercise
